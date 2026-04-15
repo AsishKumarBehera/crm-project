@@ -1,0 +1,125 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Wrapper (full screen center without scroll) */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 10px; /* reduced to avoid overflow */
+  background: linear-gradient(135deg, #e3f2fd, #ffffff);
+}
+
+/* Card */
+.login-container {
+  width: 100%;
+  max-width: 360px;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  background: #fff;
+  transition: transform 0.3s ease;
+}
+
+.login-container:hover {
+  transform: translateY(-3px);
+}
+
+/* Header */
+.login-header {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.error{
+    color: red;
+    text-align: left;
+    margin-left: 5px;
+    margin-top: -5px;
+}
+
+/* Inputs */
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+/* Button */
+.login-btn {
+  padding: 12px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #003f8a);
+  transform: scale(1.02);
+}
+
+/* Text */
+.text-login {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.text-login a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.text-login a:hover {
+  text-decoration: underline;
+}
+
+/* 📱 Mobile */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 18px;
+  }
+
+  .login-btn {
+    font-size: 14px;
+  }
+}
+
+/* 📱 Tablet */
+@media (min-width: 481px) and (max-width: 768px) {
+  .login-container {
+    max-width: 380px;
+  }
+}
+
+/* 💻 Desktop */
+@media (min-width: 769px) {
+  .login-container {
+    max-width: 420px;
+  }
+}

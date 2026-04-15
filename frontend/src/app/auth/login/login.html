@@ -1,0 +1,127 @@
+<div class="wrapper">
+  <div class="login-container">
+    <h2 class="login-header">Login</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+      <!-- Email -->
+      <div class="input-group">
+        <input 
+          type="email" 
+          formControlName="email" 
+          placeholder="Enter Email" 
+        />
+      </div>
+
+      <!-- Email Error -->
+      <div 
+        *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+        class="error"
+      >
+        <small *ngIf="loginForm.get('email')?.errors?.['required']">
+          Email is required
+        </small>
+        <small *ngIf="loginForm.get('email')?.errors?.['email']">
+          Enter a valid email
+        </small>
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <input 
+          type="password" 
+          formControlName="password" 
+          placeholder="Enter Password" 
+        />
+      </div>
+
+      <!-- Password Error -->
+      <div 
+        *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+        class="error"
+      >
+        <small *ngIf="loginForm.get('password')?.errors?.['required']">
+          Password is required
+        </small>
+        <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
+          Minimum 6 characters required
+        </small>
+      </div>
+
+      <!-- Button -->
+      <button class="login-btn" type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <!-- Navigation -->
+    <p class="text-login">
+      Don’t have an account?
+      <a routerLink="/signup">Signup</a>
+    </p>
+  </div>
+</div><div class="wrapper">
+  <div class="login-container">
+    <h2 class="login-header">Login</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+      <!-- Email -->
+      <div class="input-group">
+        <input 
+          type="email" 
+          formControlName="email" 
+          placeholder="Enter Email" 
+        />
+      </div>
+
+      <!-- Email Error -->
+      <div 
+        *ngIf="(submitted || loginForm.get('email')?.touched) && loginForm.get('email')?.invalid"
+        class="error"
+      >
+        <small *ngIf="loginForm.get('email')?.errors?.['required']">
+          Email is required
+        </small>
+        <small *ngIf="loginForm.get('email')?.errors?.['email']">
+          Enter a valid email
+        </small>
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <input 
+          type="password" 
+          formControlName="password" 
+          placeholder="Enter Password" 
+        />
+      </div>
+
+      <!-- Password Error -->
+      <div 
+        *ngIf="(submitted || loginForm.get('password')?.touched) && loginForm.get('password')?.invalid"
+        class="error"
+      >
+        <small *ngIf="loginForm.get('password')?.errors?.['required']">
+          Password is required
+        </small>
+        <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
+          Minimum 6 characters required
+        </small>
+      </div>
+
+      <!-- Button -->
+      <button class="login-btn" type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <!-- Navigation -->
+    <p class="text-login">
+      Don’t have an account?
+      <a routerLink="/signup">Signup</a>
+    </p>
+  </div>
+</div>
