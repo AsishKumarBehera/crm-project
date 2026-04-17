@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, NgIf],
   templateUrl: './signup.html',
-  styleUrl: './signup.css',
+  styleUrls: ['./signup.css'],
 })
 export class Signup {
   signupForm: FormGroup;
@@ -23,8 +23,11 @@ export class Signup {
     private router: Router,
   ) {
     this.signupForm = this.fb.group({
-      name: ['', [Validators.required]],
+      name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      dob: [''],
+      profilePic: [''],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
@@ -36,6 +39,8 @@ export class Signup {
       this.signupForm.markAllAsTouched();
       return;
     }
+
+    
 
     this.auth.signup(this.signupForm.value).subscribe({
       next: (res: any) => {
@@ -54,9 +59,20 @@ export class Signup {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: err.error.message,
+          text: err?.error?.message || 'Something went wrong',
         });
       },
     });
   }
+  onPhoneInput(event: any) {
+  let value = event.target.value;
+
+  // remove non-numbers
+  value = value.replace(/[^0-9]/g, '');
+
+  // limit to 10 digits
+  value = value.slice(0, 10);
+
+  this.signupForm.get('phone')?.setValue(value, { emitEvent: false });
+}
 }

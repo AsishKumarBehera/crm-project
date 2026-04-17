@@ -2,13 +2,27 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const app = express();
+const leadRoutes = require("./routes/leadRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 
 // middleware
+app.use(cors({
+  origin: "http://localhost:4200", // frontend URL
+  credentials: true
+}));
 app.use(express.json());
-app.use(cors());
-app.use("/api", authRoutes);
+app.use(cookieParser());
+app.use("/api/auth", authRoutes);
+app.use("/api/leads", leadRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+console.log("Auth Routes Loaded");
 
 // DB connection
 mongoose.connect(process.env.MONGO_URI)

@@ -1,0 +1,113 @@
+<!-- ☰ Mobile Menu Button -->
+<div 
+  class="sidebar__mobile-toggle" 
+  [class.sidebar__mobile-toggle--hide]="isOpen"
+  (click)="openSidebar()"
+>
+  ☰
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar" [class.sidebar--open]="isOpen">
+
+  <!-- Header -->
+  <div class="sidebar__header">
+    <h2 class="sidebar__logo">CRM</h2>
+    <span class="sidebar__close" (click)="closeSidebar()">✖</span>
+  </div>
+
+  <!-- Section -->
+  <div class="sidebar__section">
+    <p class="sidebar__section-title">Main</p>
+
+    <ul class="sidebar__menu">
+
+      <li 
+        class="sidebar__item"
+        (click)="goToDashboard()"
+      >
+        <span class="sidebar__icon">🏠</span>
+        <span class="sidebar__text">Dashboard</span>
+      </li>
+
+      <li 
+        class="sidebar__item"
+        (click)="goToPublisher()"
+      >
+        <span class="sidebar__icon">📢</span>
+        <span class="sidebar__text">Publisher</span>
+      </li>
+
+      <li 
+        class="sidebar__item"
+        (click)="goToLeads()"
+      >
+        <span class="sidebar__icon">📋</span>
+        <span class="sidebar__text">Leads</span>
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="sidebar__section">
+    <p class="sidebar__section-title">Data</p>
+
+    <ul class="sidebar__menu">
+
+      <li 
+        class="sidebar__item"
+        (click)="goToDashboard()"
+      >
+        <span class="sidebar__icon"></span>
+        <span class="sidebar__text">Notes</span>
+      </li>
+
+      <li 
+        class="sidebar__item"
+        (click)="goToPublisher()"
+      >
+        <span class="sidebar__icon"></span>
+        <span class="sidebar__text">Report & Activity</span>
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="sidebar__section">
+    <p class="sidebar__section-title">Setting</p>
+
+    <ul class="sidebar__menu">
+
+      <li 
+        class="sidebar__item"
+        (click)="goToDashboard()"
+      >
+        <span class="sidebar__icon"></span>
+        <span class="sidebar__text">Setting</span>
+      </li>
+
+      <li 
+        class="sidebar__item"
+        (click)="goToPublisher()"
+      >
+        <span class="sidebar__icon"></span>
+        <span class="sidebar__text">Access Control</span>
+      </li>
+
+    </ul>
+  </div>
+
+</div>
+
+<!-- Overlay -->
+<div 
+  class="sidebar__overlay" 
+  *ngIf="isOpen" 
+  (click)="closeSidebar()">
+</div>
+
+
+
+
+
+

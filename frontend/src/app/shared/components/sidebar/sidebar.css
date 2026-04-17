@@ -1,0 +1,184 @@
+/* ================= BASE ================= */
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(180deg, #ffffff, #f1f5f9);
+  color: #1e293b;
+  padding: 20px;
+  position: fixed;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06);
+  z-index: 1200;
+}
+
+/* ================= HEADER ================= */
+
+.sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.sidebar__logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Close button */
+.sidebar__close {
+  font-size: 18px;
+  cursor: pointer;
+  display: none;
+  transition: 0.2s;
+}
+
+.sidebar__close:hover {
+  transform: scale(1.1);
+}
+
+/* ================= SECTION ================= */
+
+.sidebar__section {
+  margin-top: 10px;
+}
+
+.sidebar__section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* ================= MENU ================= */
+
+.sidebar__menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Menu item */
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 14px;
+  color: #334155;
+  border-left: 3px solid #3b82f6;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Icon */
+.sidebar__icon {
+  font-size: 16px;
+}
+
+/* Text */
+.sidebar__text {
+  flex: 1;
+}
+
+/* Hover */
+.sidebar__item:hover {
+  background: #e2e8f0;
+  transform: translateX(4px);
+  border-left: 3px solid #3b82f6;
+}
+
+/* Active */
+.sidebar__item--active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #ffffff;
+  font-weight: 500;
+  border-left: 3px solid #2e3852;
+}
+
+/* ================= MOBILE TOGGLE ================= */
+
+.sidebar__mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 1300;
+  background: #ffffff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+/* ✅ Hide toggle when sidebar open */
+.sidebar__mobile-toggle--hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ================= OVERLAY ================= */
+
+.sidebar__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 1100;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    transform: translateX(-100%);
+  }
+
+  .sidebar--open {
+    transform: translateX(0);
+  }
+
+  .sidebar__mobile-toggle {
+    display: block;
+  }
+
+  .sidebar__close {
+    display: block;
+  }
+
+  .sidebar__logo {
+    font-size: 18px;
+    margin-left: 10px;
+  }
+
+  .sidebar__section-title {
+    font-size: 11px;
+  }
+
+  .sidebar__item {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .sidebar__icon {
+    font-size: 14px;
+  }
+}

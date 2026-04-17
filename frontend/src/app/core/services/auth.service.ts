@@ -5,15 +5,19 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
-
   private API_URL = 'http://localhost:5000/api';
 
   constructor(private http: HttpClient) {}
 
   signup(data: any) {
-    return this.http.post(`${this.API_URL}/signup`, data);
+    return this.http.post(`${this.API_URL}/auth/signup`, data, { withCredentials: true });
   }
+
   login(data: any) {
-  return this.http.post(`${this.API_URL}/login`, data);
-}
+    return this.http.post(`${this.API_URL}/auth/login`, data, { withCredentials: true });
+  }
+
+  logout() {
+    return this.http.post(`${this.API_URL}/auth/logout`, {}, { withCredentials: true });
+  }
 }

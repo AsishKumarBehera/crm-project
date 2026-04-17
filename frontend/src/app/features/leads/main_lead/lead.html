@@ -1,0 +1,126 @@
+<!-- ================= MAIN ================= -->
+<div class="lead">
+
+  <!-- HEADER -->
+  <div class="lead__header">
+    <h2 class="lead__title">Leads</h2>
+
+    <div class="lead__header-actions">
+      <button class="lead__btn lead__btn--secondary" (click)="resetFilters()">Reset</button>
+      <button class="lead__btn" (click)="openModal()">+ Create Lead</button>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="lead__filters">
+    <input
+      type="text"
+      placeholder="Search..."
+      [(ngModel)]="filters.search"
+      (input)="loadLeads()"
+      class="lead__input"
+    />
+
+    <select [(ngModel)]="filters.stage" (change)="loadLeads()" class="lead__input">
+      <option value="">All Stage</option>
+      <option *ngFor="let s of stageOptions" [value]="s">{{ s }}</option>
+    </select>
+
+    <select [(ngModel)]="filters.status" (change)="loadLeads()" class="lead__input">
+      <option value="">All Status</option>
+      <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+    </select>
+  </div>
+
+  <!-- TABLE -->
+  <div class="lead__table-wrapper">
+    <table class="lead__table">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Stage</th>
+          <th>Status</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngIf="isLoading">
+          <td colspan="6" class="lead__empty">Loading...</td>
+        </tr>
+
+        <tr *ngIf="!isLoading && leads.length === 0">
+          <td colspan="6" class="lead__empty">No leads found</td>
+        </tr>
+
+        <tr *ngFor="let lead of leads" class="lead__row">
+           <td class="lead__id"> {{ lead._id | slice:0:6 }}   <!-- short id --> </td>
+          <td>{{ lead.name }}</td>
+          <td>{{ lead.email }}</td>
+          <td>{{ lead.phone }}</td>
+
+          <td>
+            <span class="lead__badge" [ngClass]="getBadgeClass(lead.stage)">
+              {{ lead.stage }}
+            </span>
+          </td>
+
+          <td>
+            <span class="lead__badge" [ngClass]="getBadgeClass(lead.status)">
+              {{ lead.status }}
+            </span>
+          </td>
+
+          <td>{{ lead.createdAt | date:'short' }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+<div class="lead__modal" *ngIf="showModal">
+  <div class="lead__overlay" (click)="closeModal()"></div>
+
+  <div class="lead__modal-content">
+    <h3>Create Lead</h3>
+
+    <form (ngSubmit)="addLead(leadForm)" #leadForm="ngForm" class="lead__form">
+
+      <div class="lead__form-group">
+        <label>Name</label>
+        <input type="text" [(ngModel)]="newLead.name" name="name" required />
+      </div>
+
+      <div class="lead__form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="newLead.email" name="email" required />
+      </div>
+
+      <div class="lead__form-group">
+        <label>Phone</label>
+        <input type="tel" [(ngModel)]="newLead.phone" name="phone" maxlength="10" (input)="onlyNumbers($event)" required />
+      </div>
+
+      <div class="lead__form-group">
+        <label>Stage</label>
+        <select [(ngModel)]="newLead.stage" name="stage">
+          <option *ngFor="let s of stageOptions" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <div class="lead__form-actions">
+        <button type="button" (click)="closeModal()" class="lead__btn--secondary">Cancel</button>
+        <button type="submit" class="lead__btn">Save</button>
+      </div>
+
+    </form>
+  </div>
+</div>

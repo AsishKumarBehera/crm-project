@@ -1,12 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
-/* Remove default spacing */
-html, body {
-  height: 100%;
+body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
-/* Prevent scroll issue */
-body {
-  overflow: hidden;
+html, body {
+  height: 100%;
 }

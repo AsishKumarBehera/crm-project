@@ -9,10 +9,7 @@
         <input type="text" formControlName="name" placeholder="Enter Name" />
       </div>
 
-      <div 
-        *ngIf="(submitted || signupForm.get('name')?.dirty) && signupForm.get('name')?.invalid"
-        class="error"
-      >
+      <div *ngIf="(submitted || signupForm.get('name')?.dirty) && signupForm.get('name')?.invalid" class="error">
         <small>Name is required</small>
       </div>
 
@@ -21,10 +18,7 @@
         <input type="email" formControlName="email" placeholder="Enter Email" />
       </div>
 
-      <div 
-        *ngIf="(submitted || signupForm.get('email')?.dirty) && signupForm.get('email')?.invalid"
-        class="error"
-      >
+      <div *ngIf="(submitted || signupForm.get('email')?.dirty) && signupForm.get('email')?.invalid" class="error">
         <small *ngIf="signupForm.get('email')?.errors?.['required']">
           Email is required
         </small>
@@ -33,15 +27,31 @@
         </small>
       </div>
 
+      <div class="input-group">
+        <input type="text" formControlName="phone" placeholder="Enter Phone Number" maxlength="10" (input)="onPhoneInput($event)" />
+      </div>
+
+      <div *ngIf="(submitted || signupForm.get('phone')?.dirty) && signupForm.get('phone')?.invalid" class="error">
+        <small>Valid 10-digit phone is required</small>
+      </div>
+
+      <!-- DOB -->
+      <div class="input-group">
+        <input type="date" formControlName="dob" />
+      </div>
+
+      <!-- Profile Pic -->
+      <div class="input-group">
+        <input type="text" formControlName="profilePic" placeholder="Enter Profile Image URL" />
+      </div>
+
       <!-- Password -->
       <div class="input-group">
         <input type="password" formControlName="password" placeholder="Enter Password" />
       </div>
 
-      <div 
-        *ngIf="(submitted || signupForm.get('password')?.dirty) && signupForm.get('password')?.invalid"
-        class="error"
-      >
+      <div *ngIf="(submitted || signupForm.get('password')?.dirty) && signupForm.get('password')?.invalid"
+        class="error">
         <small *ngIf="signupForm.get('password')?.errors?.['required']">
           Password is required
         </small>

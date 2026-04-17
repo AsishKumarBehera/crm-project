@@ -1,0 +1,450 @@
+/* =============================================
+   DASHBOARD COMPONENT STYLES
+   dashboard.component.css
+   ============================================= */
+
+/* --- Layout --- */
+.dashboard {
+  padding: 1.5rem 1.25rem;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+/* --- Welcome Section --- */
+.dashboard__welcome {
+  margin-bottom: 1.5rem;
+}
+
+.dashboard__title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 4px;
+}
+
+.dashboard__user {
+  color: #3266ad;
+}
+
+.dashboard__date {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+/* --- Stat Cards Grid --- */
+.dashboard__cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 1.5rem;
+}
+
+/* --- Single Stat Card --- */
+.dashboard__card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 0.5px solid #e8e8ee;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.dashboard__card:hover {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+  transform: translateY(-2px);
+}
+
+.dashboard__card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dashboard__card-title {
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.dashboard__card-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.1;
+}
+
+.dashboard__card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Card Variants */
+.dashboard__card--total .dashboard__card-icon {
+  background: #e6f1fb;
+  color: #185fa5;
+}
+
+.dashboard__card--new .dashboard__card-icon {
+  background: #eaf3de;
+  color: #3b6d11;
+}
+
+.dashboard__card--converted .dashboard__card-icon {
+  background: #e1f5ee;
+  color: #0f6e56;
+}
+
+.dashboard__card--lost .dashboard__card-icon {
+  background: #fcebeb;
+  color: #a32d2d;
+}
+
+/* --- Charts + Activity Row --- */
+.dashboard__charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* --- Bottom Row: Activity + Chat --- */
+.dashboard__bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* --- Section Panel (shared card wrapper) --- */
+.dashboard__section {
+  background: #ffffff;
+  border: 0.5px solid #e8e8ee;
+  border-radius: 14px;
+  padding: 1.2rem 1.25rem;
+}
+
+.dashboard__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dashboard__section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.dashboard__badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #f0f1f7;
+  color: #666;
+  font-weight: 500;
+}
+
+.dashboard__badge--live {
+  background: #e1f5ee;
+  color: #0f6e56;
+}
+
+.dashboard__badge--online {
+  background: #e6f1fb;
+  color: #185fa5;
+}
+
+/* --- Chart Wrapper --- */
+.dashboard__chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+}
+
+.dashboard__chart-wrap--donut {
+  height: 160px;
+  margin-bottom: 12px;
+}
+
+/* --- Chart Legend --- */
+.dashboard__legend {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.dashboard__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #888;
+}
+
+.dashboard__legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.dashboard__legend-dot--new       { background: #3266ad; }
+.dashboard__legend-dot--converted  { background: #1d9e75; }
+.dashboard__legend-dot--lost       { background: #e24b4a; }
+
+/* --- Range Select (chart filter) --- */
+.dashboard__range-select {
+  font-size: 11px;
+  border: 0.5px solid #e0e0e8;
+  border-radius: 6px;
+  padding: 3px 8px;
+  background: #f5f6fa;
+  color: #666;
+  cursor: pointer;
+  outline: none;
+}
+
+.dashboard__range-select:focus {
+  border-color: #3266ad;
+}
+
+/* --- Activity Feed --- */
+.dashboard__activity {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.dashboard__activity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.dashboard__activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dashboard__activity-dot--new        { background: #3266ad; }
+.dashboard__activity-dot--converted   { background: #1d9e75; }
+.dashboard__activity-dot--lost        { background: #e24b4a; }
+
+.dashboard__activity-name {
+  flex: 1;
+  color: #1a1a2e;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard__activity-tag {
+  font-size: 11px;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dashboard__activity-tag--new        { background: #e6f1fb; color: #185fa5; }
+.dashboard__activity-tag--converted   { background: #e1f5ee; color: #0f6e56; }
+.dashboard__activity-tag--lost        { background: #fcebeb; color: #a32d2d; }
+
+.dashboard__activity-time {
+  font-size: 11px;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+/* --- AI Chat --- */
+.dashboard__chat {
+  display: flex;
+  flex-direction: column;
+  height: 260px;
+}
+
+.dashboard__chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #e0e0e8 transparent;
+}
+
+.dashboard__chat-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dashboard__chat-messages::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+/* Chat message bubbles */
+.dashboard__chat-msg {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.dashboard__chat-msg--out {
+  flex-direction: row-reverse;
+}
+
+.dashboard__chat-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.dashboard__chat-avatar--ai   { background: #e6f1fb; color: #185fa5; }
+.dashboard__chat-avatar--user { background: #eeedfe; color: #533ab7; }
+
+.dashboard__chat-bubble {
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 80%;
+  line-height: 1.5;
+  color: #1a1a2e;
+  background: #f5f6fa;
+}
+
+.dashboard__chat-msg--out .dashboard__chat-bubble {
+  background: #3266ad;
+  color: #ffffff;
+  border-radius: 12px 12px 0 12px;
+}
+
+.dashboard__chat-msg:not(.dashboard__chat-msg--out) .dashboard__chat-bubble {
+  border-radius: 12px 12px 12px 0;
+}
+
+/* Chat input row */
+.dashboard__chat-input {
+  display: flex;
+  gap: 8px;
+}
+
+.dashboard__chat-field {
+  flex: 1;
+  height: 36px;
+  border: 0.5px solid #e0e0e8;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 13px;
+  background: #f5f6fa;
+  color: #1a1a2e;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.dashboard__chat-field:focus {
+  border-color: #3266ad;
+  background: #fff;
+}
+
+.dashboard__chat-send {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 0.5px solid #e0e0e8;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.dashboard__chat-send:hover {
+  background: #3266ad;
+  color: #ffffff;
+  border-color: #3266ad;
+}
+
+/* =============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================= */
+
+/* Tablet: ≤ 900px */
+@media (max-width: 900px) {
+  .dashboard__cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard__charts {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile: ≤ 600px */
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 1rem 0.75rem;
+  }
+
+  .dashboard__cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .dashboard__card-value {
+    font-size: 22px;
+  }
+
+  .dashboard__section {
+    padding: 1rem;
+  }
+
+  .dashboard__chart-wrap {
+    height: 160px;
+  }
+}
+
+/* Small mobile: ≤ 380px */
+@media (max-width: 380px) {
+  .dashboard__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__title {
+    font-size: 18px;
+  }
+}

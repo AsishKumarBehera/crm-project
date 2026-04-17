@@ -6,25 +6,27 @@
 
       <!-- Email -->
       <div class="input-group">
-        <input 
-          type="email" 
-          formControlName="email" 
-          placeholder="Enter Email" 
-        />
-      </div>
+  <input 
+    type="text"
+    formControlName="email"
+    placeholder="Enter Email or Phone"
+  />
+</div>
 
-      <!-- Email Error -->
-      <div 
-        *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
-        class="error"
-      >
-        <small *ngIf="loginForm.get('email')?.errors?.['required']">
-          Email is required
-        </small>
-        <small *ngIf="loginForm.get('email')?.errors?.['email']">
-          Enter a valid email
-        </small>
-      </div>
+<div 
+  *ngIf="(submitted || loginForm.get('email')?.touched) && loginForm.get('email')?.invalid"
+  class="error"
+>
+  <!-- Required -->
+  <small *ngIf="loginForm.get('email')?.errors?.['required']">
+    Email or Phone is required
+  </small>
+
+  <!-- Pattern -->
+  <small *ngIf="loginForm.get('email')?.errors?.['pattern']">
+    Enter valid Email or 10-digit Phone
+  </small>
+</div>
 
       <!-- Password -->
       <div class="input-group">

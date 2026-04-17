@@ -1,0 +1,128 @@
+/* ROOT */
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 20px;
+}
+
+/* CONTAINER */
+.profile__container {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* TITLE */
+.profile__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+  text-align: center;
+}
+
+/* FORM */
+.profile__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* INPUT */
+.profile__input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5f5;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* ACTIONS */
+.profile__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* BUTTON */
+.profile__btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.profile__btn--primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.profile__btn--secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* RESPONSIVE */
+
+/* 📱 Mobile */
+@media (max-width: 480px) {
+
+  .profile {
+    padding: 10px;
+  }
+
+  .profile__container {
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .profile__title {
+    font-size: 18px;
+  }
+
+  .profile__input {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .profile__btn {
+    font-size: 13px;
+    padding: 9px;
+  }
+
+  /* Stack buttons vertically */
+  .profile__actions {
+    flex-direction: column;
+  }
+}
+
+/* 📱 Tablet */
+@media (min-width: 481px) and (max-width: 768px) {
+
+  .profile__container {
+    max-width: 500px;
+  }
+
+  .profile__title {
+    font-size: 19px;
+  }
+}
+
+/* 💻 Large screens */
+@media (min-width: 1024px) {
+
+  .profile__container {
+    max-width: 450px;
+  }
+}
