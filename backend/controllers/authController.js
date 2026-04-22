@@ -1,9 +1,9 @@
-const User = require("../models/User");
-const { hashPassword, comparePassword } = require("../utils/hashPassword");
-const generateToken = require("../utils/generateToken");
+import User from "../models/User.js";
+import { hashPassword, comparePassword } from "../utils/hashPassword.js";
+import generateToken from "../utils/generateToken.js";
 
 // SIGNUP
-exports.signup = async (req, res) => {
+export async function signup (req, res) {
   try {
     const { name, email, phone, dob, profilePic, password } = req.body;
 
@@ -73,7 +73,7 @@ exports.signup = async (req, res) => {
 
 
 // LOGIN
-exports.login = async (req, res) => {
+export async function login (req, res) {
   try {
     const { email, password } = req.body;
 
@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user);
 
-    // ✅ Store token in cookie
+    //  Store token in cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: false, // true in production
@@ -121,10 +121,13 @@ exports.login = async (req, res) => {
 };
 
 // logout
-
-exports.logout = async (req, res) => {
+export async function logout (req, res) {
   await User.findByIdAndUpdate(req.user._id, { $inc: { tokenVersion: 1 } });
   res.clearCookie("token");
   res.json({ message: "Logged out successfully" });
 };
 
+
+export const loggedIn = (req, res) => {
+  res.status(200).json({ isAuthenticated: true });
+};

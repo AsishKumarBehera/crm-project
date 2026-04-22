@@ -7,10 +7,13 @@
 .dashboard {
   padding: 1.5rem 1.25rem;
   font-family: 'Inter', 'Segoe UI', sans-serif;
-  width: 100%;
+  width: auto;
   box-sizing: border-box;
   background: #f5f6fa;
-  min-height: 100vh;
+
+  /* FIX 1: removed min-height: 100vh — the parent .content
+     in home.component.css already handles full height via
+     flex: 1. This was causing double-height on short screens. */
 }
 
 /* --- Welcome Section --- */
@@ -92,28 +95,25 @@
   flex-shrink: 0;
 }
 
-/* Card Variants */
+/* Card variants */
 .dashboard__card--total .dashboard__card-icon {
   background: #e6f1fb;
   color: #185fa5;
 }
-
 .dashboard__card--new .dashboard__card-icon {
   background: #eaf3de;
   color: #3b6d11;
 }
-
 .dashboard__card--converted .dashboard__card-icon {
   background: #e1f5ee;
   color: #0f6e56;
 }
-
 .dashboard__card--lost .dashboard__card-icon {
   background: #fcebeb;
   color: #a32d2d;
 }
 
-/* --- Charts + Activity Row --- */
+/* --- Charts Row --- */
 .dashboard__charts {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -128,12 +128,16 @@
   gap: 16px;
 }
 
-/* --- Section Panel (shared card wrapper) --- */
+/* --- Section Panel --- */
 .dashboard__section {
   background: #ffffff;
   border: 0.5px solid #e8e8ee;
   border-radius: 14px;
   padding: 1.2rem 1.25rem;
+
+  /* FIX 2: sections were collapsing when content was loading.
+     min-height gives each panel a floor so the layout doesn't jump. */
+  min-height: 120px;
 }
 
 .dashboard__section-header {
@@ -149,6 +153,7 @@
   color: #1a1a2e;
 }
 
+/* --- Badges --- */
 .dashboard__badge {
   font-size: 11px;
   padding: 3px 10px;
@@ -169,15 +174,28 @@
 }
 
 /* --- Chart Wrapper --- */
+
+/* FIX 3: THE MAIN CHART FIX.
+   Chart.js needs a parent with a real pixel height.
+   Without this the canvas collapses and draws nothing.
+   position: relative is required for Chart.js responsive mode. */
 .dashboard__chart-wrap {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 180px;   /* explicit height — Chart.js reads this */
 }
 
 .dashboard__chart-wrap--donut {
   height: 160px;
   margin-bottom: 12px;
+}
+
+/* FIX 4: canvas must fill its wrapper exactly.
+   Chart.js sets width/height attributes directly on the canvas
+   but CSS still needs to constrain it or it overflows. */
+.dashboard__chart-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* --- Chart Legend --- */
@@ -186,6 +204,10 @@
   gap: 14px;
   margin-bottom: 10px;
   flex-wrap: wrap;
+}
+
+.dashboard__legend--centered {
+  justify-content: center;
 }
 
 .dashboard__legend-item {
@@ -205,10 +227,10 @@
 }
 
 .dashboard__legend-dot--new       { background: #3266ad; }
-.dashboard__legend-dot--converted  { background: #1d9e75; }
-.dashboard__legend-dot--lost       { background: #e24b4a; }
+.dashboard__legend-dot--converted { background: #1d9e75; }
+.dashboard__legend-dot--lost      { background: #e24b4a; }
 
-/* --- Range Select (chart filter) --- */
+/* --- Range Select --- */
 .dashboard__range-select {
   font-size: 11px;
   border: 0.5px solid #e0e0e8;
@@ -218,6 +240,7 @@
   color: #666;
   cursor: pointer;
   outline: none;
+  transition: border-color 0.2s;
 }
 
 .dashboard__range-select:focus {
@@ -245,9 +268,9 @@
   flex-shrink: 0;
 }
 
-.dashboard__activity-dot--new        { background: #3266ad; }
-.dashboard__activity-dot--converted   { background: #1d9e75; }
-.dashboard__activity-dot--lost        { background: #e24b4a; }
+.dashboard__activity-dot--new       { background: #3266ad; }
+.dashboard__activity-dot--converted { background: #1d9e75; }
+.dashboard__activity-dot--lost      { background: #e24b4a; }
 
 .dashboard__activity-name {
   flex: 1;
@@ -266,9 +289,9 @@
   white-space: nowrap;
 }
 
-.dashboard__activity-tag--new        { background: #e6f1fb; color: #185fa5; }
-.dashboard__activity-tag--converted   { background: #e1f5ee; color: #0f6e56; }
-.dashboard__activity-tag--lost        { background: #fcebeb; color: #a32d2d; }
+.dashboard__activity-tag--new       { background: #e6f1fb; color: #185fa5; }
+.dashboard__activity-tag--converted { background: #e1f5ee; color: #0f6e56; }
+.dashboard__activity-tag--lost      { background: #fcebeb; color: #a32d2d; }
 
 .dashboard__activity-time {
   font-size: 11px;
@@ -276,11 +299,23 @@
   white-space: nowrap;
 }
 
+/* FIX 5: empty state so the activity section doesn't look broken */
+.dashboard__empty {
+  font-size: 13px;
+  color: #aaa;
+  text-align: center;
+  padding: 20px 0;
+}
+
 /* --- AI Chat --- */
 .dashboard__chat {
   display: flex;
   flex-direction: column;
-  height: 260px;
+
+  /* FIX 6: was fixed height: 260px with no overflow guard.
+     If the section panel is taller/shorter the chat was misaligned.
+     Now it fills whatever height the section gives it. */
+  height: 220px;
 }
 
 .dashboard__chat-messages {
@@ -304,7 +339,6 @@
   border-radius: 4px;
 }
 
-/* Chat message bubbles */
 .dashboard__chat-msg {
   display: flex;
   gap: 8px;
@@ -350,10 +384,11 @@
   border-radius: 12px 12px 12px 0;
 }
 
-/* Chat input row */
+/* Chat input */
 .dashboard__chat-input {
   display: flex;
   gap: 8px;
+  flex-shrink: 0;   /* FIX 7: prevents input row from being squeezed out */
 }
 
 .dashboard__chat-field {
@@ -395,12 +430,18 @@
   border-color: #3266ad;
 }
 
+
+
+/* ---Skeleton--- */
+
+
 /* =============================================
-   RESPONSIVE BREAKPOINTS
+   RESPONSIVE
    ============================================= */
 
 /* Tablet: ≤ 900px */
 @media (max-width: 900px) {
+
   .dashboard__cards {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -416,6 +457,7 @@
 
 /* Mobile: ≤ 600px */
 @media (max-width: 600px) {
+
   .dashboard {
     padding: 1rem 0.75rem;
   }
@@ -436,10 +478,17 @@
   .dashboard__chart-wrap {
     height: 160px;
   }
+
+  /* FIX 8: on mobile the chat height was too tall,
+     pushing the input off screen on small phones. */
+  .dashboard__chat {
+    height: 200px;
+  }
 }
 
 /* Small mobile: ≤ 380px */
 @media (max-width: 380px) {
+
   .dashboard__cards {
     grid-template-columns: 1fr;
   }

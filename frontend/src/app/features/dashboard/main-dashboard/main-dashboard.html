@@ -11,59 +11,65 @@
   <!-- Stat Cards -->
   <div class="dashboard__cards">
 
-    <div class="dashboard__card dashboard__card--total">
-      <div class="dashboard__card-left">
-        <div class="dashboard__card-title">Total Leads</div>
-        <div class="dashboard__card-value">{{ stats.total }}</div>
-      </div>
-      <div class="dashboard__card-icon">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="5" r="3" fill="currentColor"/>
-          <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        </svg>
-      </div>
-    </div>
+    <ng-container *ngIf="isLoading">
+    <app-skeleton type="card" *ngFor="let i of [1,2,3,4]"></app-skeleton>
+  </ng-container>
 
-    <div class="dashboard__card dashboard__card--new">
-      <div class="dashboard__card-left">
-        <div class="dashboard__card-title">New Leads</div>
-        <div class="dashboard__card-value">{{ stats.new }}</div>
+    <ng-container *ngIf="!isLoading">
+      <div class="dashboard__card dashboard__card--total">
+        <div class="dashboard__card-left">
+          <div class="dashboard__card-title">Total Leads</div>
+          <div class="dashboard__card-value">{{ stats.total }}</div>
+        </div>
+        <div class="dashboard__card-icon">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="5" r="3" fill="currentColor" />
+            <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" fill="none" />
+          </svg>
+        </div>
       </div>
-      <div class="dashboard__card-icon">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="5" r="3" fill="currentColor"/>
-          <path d="M11 11h4M13 9v4M2 14c0-3.314 2.686-6 6-6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        </svg>
-      </div>
-    </div>
 
-    <div class="dashboard__card dashboard__card--converted">
-      <div class="dashboard__card-left">
-        <div class="dashboard__card-title">Converted</div>
-        <div class="dashboard__card-value">{{ stats.converted }}</div>
+      <div class="dashboard__card dashboard__card--new">
+        <div class="dashboard__card-left">
+          <div class="dashboard__card-title">New Leads</div>
+          <div class="dashboard__card-value">{{ stats.new }}</div>
+        </div>
+        <div class="dashboard__card-icon">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="5" r="3" fill="currentColor" />
+            <path d="M11 11h4M13 9v4M2 14c0-3.314 2.686-6 6-6" stroke="currentColor" stroke-width="1.5" fill="none" />
+          </svg>
+        </div>
       </div>
-      <div class="dashboard__card-icon">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="5" r="3" fill="currentColor"/>
-          <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <path d="M5 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        </svg>
-      </div>
-    </div>
 
-    <div class="dashboard__card dashboard__card--lost">
-      <div class="dashboard__card-left">
-        <div class="dashboard__card-title">Lost</div>
-        <div class="dashboard__card-value">{{ stats.lost }}</div>
+      <div class="dashboard__card dashboard__card--converted">
+        <div class="dashboard__card-left">
+          <div class="dashboard__card-title">Converted</div>
+          <div class="dashboard__card-value">{{ stats.converted }}</div>
+        </div>
+        <div class="dashboard__card-icon">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="5" r="3" fill="currentColor" />
+            <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" fill="none" />
+            <path d="M5 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none" />
+          </svg>
+        </div>
       </div>
-      <div class="dashboard__card-icon">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="5" r="3" fill="currentColor"/>
-          <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <path d="M6 11l4 4M10 11l-4 4" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        </svg>
+
+      <div class="dashboard__card dashboard__card--lost">
+        <div class="dashboard__card-left">
+          <div class="dashboard__card-title">Lost</div>
+          <div class="dashboard__card-value">{{ stats.lost }}</div>
+        </div>
+        <div class="dashboard__card-icon">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="5" r="3" fill="currentColor" />
+            <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" fill="none" />
+            <path d="M6 11l4 4M10 11l-4 4" stroke="currentColor" stroke-width="1.5" fill="none" />
+          </svg>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
   </div>
 
@@ -72,53 +78,71 @@
 
     <!-- Line Chart -->
     <div class="dashboard__section">
-      <div class="dashboard__section-header">
-        <div class="dashboard__section-title">Lead trends</div>
-        <select class="dashboard__range-select" [(ngModel)]="selectedRange" (change)="onRangeChange()">
-          <option value="6m">6 months</option>
-          <option value="3m">3 months</option>
-        </select>
-      </div>
-      <div class="dashboard__legend">
-        <span class="dashboard__legend-item">
-          <i class="dashboard__legend-dot dashboard__legend-dot--new"></i> New
-        </span>
-        <span class="dashboard__legend-item">
-          <i class="dashboard__legend-dot dashboard__legend-dot--converted"></i> Converted
-        </span>
-        <span class="dashboard__legend-item">
-          <i class="dashboard__legend-dot dashboard__legend-dot--lost"></i> Lost
-        </span>
-      </div>
-      <div class="dashboard__chart-wrap">
-        <canvas id="leadsLineChart" role="img" aria-label="Line chart showing new, converted and lost leads over time">
-          Monthly lead trends across New, Converted, and Lost categories.
-        </canvas>
-      </div>
+
+      <!-- Skeleton -->
+      <app-skeleton *ngIf="isLoading" type="chart-line"></app-skeleton>
+
+      <!-- Actual -->
+      <ng-container *ngIf="!isLoading">
+        <div class="dashboard__section-header">
+          <div class="dashboard__section-title">Lead trends</div>
+          <select class="dashboard__range-select" [(ngModel)]="selectedRange" (change)="onRangeChange()">
+            <option value="6m">6 months</option>
+            <option value="3m">3 months</option>
+          </select>
+        </div>
+
+        <div class="dashboard__legend">
+          <span class="dashboard__legend-item">
+            <i class="dashboard__legend-dot dashboard__legend-dot--new"></i> New
+          </span>
+          <span class="dashboard__legend-item">
+            <i class="dashboard__legend-dot dashboard__legend-dot--converted"></i> Converted
+          </span>
+          <span class="dashboard__legend-item">
+            <i class="dashboard__legend-dot dashboard__legend-dot--lost"></i> Lost
+          </span>
+        </div>
+
+        <div class="dashboard__chart-wrap">
+          <canvas id="leadsLineChart" role="img" aria-label="Line chart showing new, converted and lost leads over time">
+          </canvas>
+        </div>
+      </ng-container>
+
     </div>
 
     <!-- Donut Chart -->
     <div class="dashboard__section">
-      <div class="dashboard__section-header">
-        <div class="dashboard__section-title">Lead status</div>
-        <span class="dashboard__badge">This month</span>
-      </div>
-      <div class="dashboard__chart-wrap dashboard__chart-wrap--donut">
-        <canvas id="leadsDonutChart" role="img" aria-label="Donut chart showing distribution of lead status">
-          Lead status: New 27%, Converted 40%, Lost 33%.
-        </canvas>
-      </div>
-      <div class="dashboard__legend" style="justify-content: center;">
-        <span class="dashboard__legend-item">
-          <i class="dashboard__legend-dot dashboard__legend-dot--new"></i> New {{ stats.new }}
-        </span>
-        <span class="dashboard__legend-item">
-          <i class="dashboard__legend-dot dashboard__legend-dot--converted"></i> Converted {{ stats.converted }}
-        </span>
-        <span class="dashboard__legend-item">
-          <i class="dashboard__legend-dot dashboard__legend-dot--lost"></i> Lost {{ stats.lost }}
-        </span>
-      </div>
+
+      <!-- Skeleton -->
+      <app-skeleton *ngIf="isLoading" type="chart-donut"></app-skeleton>
+
+      <!-- Actual -->
+      <ng-container *ngIf="!isLoading">
+        <div class="dashboard__section-header">
+          <div class="dashboard__section-title">Lead status</div>
+          <span class="dashboard__badge">This month</span>
+        </div>
+
+        <div class="dashboard__chart-wrap dashboard__chart-wrap--donut">
+          <canvas id="leadsDonutChart" role="img" aria-label="Donut chart showing distribution of lead status">
+          </canvas>
+        </div>
+
+        <div class="dashboard__legend dashboard__legend--centered">
+          <span class="dashboard__legend-item">
+            <i class="dashboard__legend-dot dashboard__legend-dot--new"></i> New {{ stats.new }}
+          </span>
+          <span class="dashboard__legend-item">
+            <i class="dashboard__legend-dot dashboard__legend-dot--converted"></i> Converted {{ stats.converted }}
+          </span>
+          <span class="dashboard__legend-item">
+            <i class="dashboard__legend-dot dashboard__legend-dot--lost"></i> Lost {{ stats.lost }}
+          </span>
+        </div>
+      </ng-container>
+
     </div>
 
   </div>
@@ -128,76 +152,86 @@
 
     <!-- Recent Activity -->
     <div class="dashboard__section">
-      <div class="dashboard__section-header">
-        <div class="dashboard__section-title">Recent activity</div>
-        <span class="dashboard__badge dashboard__badge--live">Live</span>
-      </div>
-      <div class="dashboard__activity">
-        <div class="dashboard__activity-row" *ngFor="let item of recentActivity">
-          <div class="dashboard__activity-dot"
-               [ngClass]="{
-                 'dashboard__activity-dot--new': item.status === 'New',
-                 'dashboard__activity-dot--converted': item.status === 'Converted',
-                 'dashboard__activity-dot--lost': item.status === 'Lost'
-               }">
-          </div>
-          <div class="dashboard__activity-name">{{ item.name }}</div>
-          <span class="dashboard__activity-tag"
-                [ngClass]="{
-                  'dashboard__activity-tag--new': item.status === 'New',
-                  'dashboard__activity-tag--converted': item.status === 'Converted',
-                  'dashboard__activity-tag--lost': item.status === 'Lost'
-                }">
-            {{ item.status }}
-          </span>
-          <div class="dashboard__activity-time">{{ item.time }}</div>
+
+      <!-- Skeleton -->
+      <app-skeleton *ngIf="isLoading" type="activity" [rows]="5"></app-skeleton>
+
+      <!-- Actual -->
+      <ng-container *ngIf="!isLoading">
+        <div class="dashboard__section-header">
+          <div class="dashboard__section-title">Recent activity</div>
+          <span class="dashboard__badge dashboard__badge--live">Live</span>
         </div>
-      </div>
+
+        <div class="dashboard__activity">
+          <ng-container *ngIf="recentActivity.length > 0; else noActivity">
+            <div class="dashboard__activity-row" *ngFor="let item of recentActivity">
+              <div class="dashboard__activity-dot" [ngClass]="{
+                  'dashboard__activity-dot--new':       item.status === 'New',
+                  'dashboard__activity-dot--converted': item.status === 'Converted',
+                  'dashboard__activity-dot--lost':      item.status === 'Lost'
+                }">
+              </div>
+              <div class="dashboard__activity-name">{{ item.name }}</div>
+              <span class="dashboard__activity-tag" [ngClass]="{
+                  'dashboard__activity-tag--new':       item.status === 'New',
+                  'dashboard__activity-tag--converted': item.status === 'Converted',
+                  'dashboard__activity-tag--lost':      item.status === 'Lost'
+                }">
+                {{ item.status }}
+              </span>
+              <div class="dashboard__activity-time">{{ item.time }}</div>
+            </div>
+          </ng-container>
+
+          <ng-template #noActivity>
+            <p class="dashboard__empty">No recent activity yet.</p>
+          </ng-template>
+        </div>
+      </ng-container>
+
     </div>
 
     <!-- AI Chat -->
     <div class="dashboard__section">
-      <div class="dashboard__section-header">
-        <div class="dashboard__section-title">AI assistant</div>
-        <span class="dashboard__badge dashboard__badge--online">Online</span>
-      </div>
-      <div class="dashboard__chat">
 
-        <div class="dashboard__chat-messages" #chatContainer>
-          <div class="dashboard__chat-msg"
-               *ngFor="let msg of chatMessages"
-               [ngClass]="{ 'dashboard__chat-msg--out': msg.from === 'user' }">
-            <div class="dashboard__chat-avatar"
-                 [ngClass]="{
-                   'dashboard__chat-avatar--ai': msg.from === 'ai',
-                   'dashboard__chat-avatar--user': msg.from === 'user'
-                 }">
-              {{ msg.from === 'ai' ? 'AI' : userInitials }}
+      <!-- Skeleton -->
+       <app-skeleton *ngIf="isLoading" type="chat" [rows]="3"></app-skeleton>
+
+      <!-- Actual -->
+      <ng-container *ngIf="!isLoading">
+        <div class="dashboard__section-header">
+          <div class="dashboard__section-title">AI assistant</div>
+          <span class="dashboard__badge dashboard__badge--online">Online</span>
+        </div>
+
+        <div class="dashboard__chat">
+          <div class="dashboard__chat-messages" #chatContainer>
+            <div class="dashboard__chat-msg" *ngFor="let msg of chatMessages"
+              [ngClass]="{ 'dashboard__chat-msg--out': msg.from === 'user' }">
+              <div class="dashboard__chat-avatar" [ngClass]="{
+                  'dashboard__chat-avatar--ai':   msg.from === 'ai',
+                  'dashboard__chat-avatar--user': msg.from === 'user'
+                }">
+                {{ msg.from === 'ai' ? 'AI' : userInitials }}
+              </div>
+              <div class="dashboard__chat-bubble">{{ msg.text }}</div>
             </div>
-            <div class="dashboard__chat-bubble">{{ msg.text }}</div>
+          </div>
+
+          <div class="dashboard__chat-input">
+            <input class="dashboard__chat-field" type="text" placeholder="Ask about your leads..."
+              [(ngModel)]="chatInput" (keydown.enter)="sendMessage()" />
+            <button class="dashboard__chat-send" (click)="sendMessage()" aria-label="Send message">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
           </div>
         </div>
+      </ng-container>
 
-        <div class="dashboard__chat-input">
-          <input
-            class="dashboard__chat-field"
-            type="text"
-            placeholder="Ask about your leads..."
-            [(ngModel)]="chatInput"
-            (keydown.enter)="sendMessage()"
-          />
-          <button class="dashboard__chat-send" (click)="sendMessage()" title="Send">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 7h12M7 1l6 6-6 6"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-
-      </div>
     </div>
 
   </div>

@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { SeletonLoder } from '../../../seleton-loder/seleton-loder';
 
-/* ✅ Type for strong typing */
+/*  Type for strong typing */
 interface DashboardStats {
   total: number;
   new: number;
@@ -16,7 +17,7 @@ interface DashboardStats {
 @Component({
   selector: 'app-main-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SeletonLoder],
   templateUrl: './main-dashboard.html',
   styleUrls: ['./main-dashboard.css'],
 })
@@ -44,13 +45,9 @@ export class MainDashboard implements OnInit, OnDestroy {
 
   /* Subscription */
   private dashSub!: Subscription;
+  recentActivity: any[] = [];
+  
 
-  /* Activity */
-  recentActivity = [
-    { name: 'John Doe', status: 'New', time: '2 min ago' },
-    { name: 'Rahul', status: 'Converted', time: '10 min ago' },
-    { name: 'Priya', status: 'Lost', time: '30 min ago' },
-  ];
 
   /* Chat */
   chatMessages: any[] = [{ from: 'ai', text: 'Hello! How can I help you?' }];
@@ -72,6 +69,7 @@ export class MainDashboard implements OnInit, OnDestroy {
         console.log("FULL RESPONSE 👉", res);
         this.userName = res?.user?.name || 'User';
         this.greeting = res?.message || '';
+        this.recentActivity = res?.activity || [];
 
         this.stats = {
   total: res?.total || 0,
@@ -95,6 +93,7 @@ export class MainDashboard implements OnInit, OnDestroy {
   onRangeChange(): void {
     console.log('Range changed:', this.selectedRange);
   }
+
 
   /* Chat */
   sendMessage(): void {

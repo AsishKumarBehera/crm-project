@@ -1,0 +1,170 @@
+/* ===== SHIMMER ANIMATION ===== */
+.skeleton {
+  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ===== CARD ===== */
+.skeleton-title {
+  height: 16px;
+  width: 80px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.skeleton-value {
+  height: 28px;
+  width: 50px;
+  border-radius: 6px;
+}
+
+/* ===== LINE CHART ===== */
+.skeleton-chart-heading {
+  height: 20px;
+  width: 120px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.skeleton-chart-body {
+  height: 200px;
+  border-radius: 10px;
+}
+
+/* ===== DONUT CHART ===== */
+.skeleton-donut-heading {
+  height: 20px;
+  width: 100px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.skeleton-donut-circle {
+  height: 180px;
+  width: 180px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+}
+
+.skeleton-donut-legend {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.skeleton-donut-legend-item {
+  height: 12px;
+  width: 60px;
+  border-radius: 6px;
+}
+
+/* ===== ACTIVITY ===== */
+.skeleton-activity-heading {
+  height: 20px;
+  width: 130px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.skeleton-activity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.skeleton-activity-dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-activity-name {
+  height: 12px;
+  width: 100px;
+  border-radius: 6px;
+}
+
+.skeleton-activity-tag {
+  height: 12px;
+  width: 60px;
+  border-radius: 6px;
+  margin-left: auto;
+}
+
+.skeleton-activity-time {
+  height: 12px;
+  width: 50px;
+  border-radius: 6px;
+}
+
+/* ===== CHAT ===== */
+.skeleton-chat-heading {
+  height: 20px;
+  width: 110px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.skeleton-chat-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.skeleton-chat-row--reverse {
+  flex-direction: row-reverse;
+}
+
+.skeleton-chat-avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-chat-bubble--left {
+  height: 36px;
+  width: 65%;
+  border-radius: 10px;
+}
+
+.skeleton-chat-bubble--right {
+  height: 36px;
+  width: 55%;
+  border-radius: 10px;
+}
+
+.skeleton-chat-input {
+  height: 42px;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+
+
+/* skeleton-table */
+
+.skeleton-table {
+  width: 100%;
+}
+
+.skeleton-table-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.skeleton-cell {
+  height: 25px;
+}

@@ -1,0 +1,68 @@
+<!-- ===== TABLE SKELETON ===== -->
+<ng-container *ngIf="type === 'table'">
+
+  <div class="skeleton-table">
+
+    <!-- ROWS -->
+    <div *ngFor="let row of rowArray" class="skeleton-table-row">
+
+      <!-- dynamic columns -->
+      <div *ngFor="let col of colArray" class="skeleton skeleton-cell"></div>
+
+    </div>
+
+  </div>
+
+</ng-container>
+
+<!-- ===== CARD ===== -->
+<ng-container *ngIf="type === 'card'">
+  <div class="dashboard__card">
+    <div class="skeleton skeleton-title"></div>
+    <div class="skeleton skeleton-value"></div>
+  </div>
+</ng-container>
+
+<!-- ===== LINE CHART ===== -->
+<ng-container *ngIf="type === 'chart-line'">
+  <div class="skeleton skeleton-chart-heading"></div>
+  <div class="skeleton skeleton-chart-body"></div>
+</ng-container>
+
+<!-- ===== DONUT CHART ===== -->
+<ng-container *ngIf="type === 'chart-donut'">
+  <div class="skeleton skeleton-donut-heading"></div>
+  <div class="skeleton skeleton-donut-circle"></div>
+  <div class="skeleton-donut-legend">
+    <div class="skeleton skeleton-donut-legend-item"></div>
+    <div class="skeleton skeleton-donut-legend-item"></div>
+    <div class="skeleton skeleton-donut-legend-item"></div>
+  </div>
+</ng-container>
+
+<!-- ===== ACTIVITY ===== -->
+<ng-container *ngIf="type === 'activity'">
+  <div class="skeleton skeleton-activity-heading"></div>
+  <div *ngFor="let i of rowArray" class="skeleton-activity-row">
+    <div class="skeleton skeleton-activity-dot"></div>
+    <div class="skeleton skeleton-activity-name"></div>
+    <div class="skeleton skeleton-activity-tag"></div>
+    <div class="skeleton skeleton-activity-time"></div>
+  </div>
+</ng-container>
+
+<!-- ===== CHAT ===== -->
+<ng-container *ngIf="type === 'chat'">
+  <div class="skeleton skeleton-chat-heading"></div>
+  <div *ngFor="let i of rowArray"
+    class="skeleton-chat-row"
+    [class.skeleton-chat-row--reverse]="i % 2 === 0">
+    <div class="skeleton skeleton-chat-avatar"></div>
+    <div class="skeleton"
+      [class.skeleton-chat-bubble--left]="i % 2 !== 0"
+      [class.skeleton-chat-bubble--right]="i % 2 === 0">
+    </div>
+  </div>
+  <div class="skeleton skeleton-chat-input"></div>
+</ng-container>
+

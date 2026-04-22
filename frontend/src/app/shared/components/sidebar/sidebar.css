@@ -1,15 +1,38 @@
+/* ================= HOST ================= */
+/* Reserves space in the flex row on desktop.
+   On mobile this collapses to 0 so the drawer
+   doesn't push content down. */
+
+:host {
+  display: block;
+  width: 250px;
+  min-width: 250px;
+  flex-shrink: 0;
+  height: 100vh;
+}
+
 /* ================= BASE ================= */
 
 .sidebar {
-  width: 250px;
+  width: 210px;
   height: 100vh;
   background: linear-gradient(180deg, #ffffff, #f1f5f9);
   color: #1e293b;
   padding: 20px;
-  position: fixed;
+  padding-bottom: 0px;
+  padding-top: 0px;
+
+  /* FIX 1: was "sticky" which breaks inside overflow:hidden.
+     "relative" keeps the sidebar in the normal flex flow. */
+  position: relative;
+
   transition: transform 0.3s ease;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06);
-  z-index: 1200;
+
+  /* FIX 2: removed z-index on desktop — no need for stacking
+     when sidebar is in normal flow. Only needed on mobile. */
+
+  overflow-y: auto;
 }
 
 /* ================= HEADER ================= */
@@ -27,7 +50,7 @@
   color: #0f172a;
 }
 
-/* Close button */
+/* Close button — hidden on desktop, shown on mobile */
 .sidebar__close {
   font-size: 18px;
   cursor: pointer;
@@ -117,11 +140,11 @@
   background: #ffffff;
   padding: 6px 10px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
-/* ✅ Hide toggle when sidebar open */
+/* Hide toggle when sidebar is open */
 .sidebar__mobile-toggle--hide {
   opacity: 0;
   pointer-events: none;
@@ -144,12 +167,25 @@
 
 @media (max-width: 768px) {
 
+  /* FIX 3: Host collapses to 0 on mobile so it doesn't
+     push content to the right — sidebar becomes a drawer. */
+  :host {
+    width: 0;
+    min-width: 0;
+    height: 0;
+  }
+
   .sidebar {
+    /* FIX 4: back to fixed on mobile — acts as a slide-in drawer */
     position: fixed;
     top: 0;
     left: 0;
     width: 220px;
+    height: 100vh;
     transform: translateX(-100%);
+
+    /* FIX 5: z-index only needed on mobile where it overlays content */
+    z-index: 1200;
   }
 
   .sidebar--open {

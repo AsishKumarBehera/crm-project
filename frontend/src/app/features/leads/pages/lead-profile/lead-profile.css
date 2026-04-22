@@ -1,0 +1,85 @@
+/* ================= CARD ================= */
+.lead-card {
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+}
+
+/* ================= TITLE ================= */
+.lead-card__title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+/* ================= GRID ================= */
+.lead-card__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* ================= ITEM ================= */
+.lead-card__item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+/* LABEL */
+.label {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 4px;
+}
+
+/* VALUE */
+.value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* ================= BADGES ================= */
+.value.stage {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.value.status {
+  color: #28a745;
+  font-weight: 600;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* 📱 Mobile */
+@media (max-width: 600px) {
+  .lead-card {
+    padding: 14px;
+  }
+
+  .lead-card__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lead-card__title {
+    font-size: 18px;
+  }
+}
+
+/* 📲 Tablet */
+@media (min-width: 601px) and (max-width: 992px) {
+  .lead-card__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 💻 Desktop */
+@media (min-width: 993px) {
+  .lead-card {
+    max-width: 700px;
+  }
+}

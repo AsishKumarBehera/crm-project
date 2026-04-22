@@ -1,19 +1,40 @@
+// lead.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class LeadService {
   private API_URL = 'http://localhost:5000/api';
 
   constructor(private http: HttpClient) {}
 
-  getLeads(filters: any = {}) {
-    return this.http.get(`${this.API_URL}/leads/getleads`, { withCredentials: true, params: filters });
+
+  getLeads(params: any = {}) {
+    return this.http.get(`${this.API_URL}/leads/getleads`, {
+      withCredentials: true,
+      params,
+    });
   }
+// getleadby Id
+  getLeadById(id: string) {
+  return this.http.get(`${this.API_URL}/leads/getLeadById/${id}`, {
+    withCredentials: true,
+    headers: { 'Cache-Control': 'no-cache' }
+  });
+}
 
   createLead(data: any) {
-    return this.http.post(`${this.API_URL}/leads/createlead`, data, { withCredentials: true });
+    return this.http.post(`${this.API_URL}/leads/createlead`, data, {
+      withCredentials: true
+        });
   }
+  updateLead(id: string, data: any) {
+    return this.http.put(`${this.API_URL}/leads/updatelead/${id}`, data, {
+      withCredentials: true
+        });
+  }
+
+
+
 }
+

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const leadSchema = new mongoose.Schema({
   name: {
@@ -33,10 +33,14 @@ const leadSchema = new mongoose.Schema({
     default: 'Active'
   },
 
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  createdBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User"
+},
+updatedBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User"
+}
+}, { timestamps: true });
 
-module.exports = mongoose.model("Lead", leadSchema);
+export default mongoose.model("Lead", leadSchema);

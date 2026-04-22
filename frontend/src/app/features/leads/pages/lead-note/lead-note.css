@@ -1,0 +1,141 @@
+/* ================= WRAPPER ================= */
+.notes-wrap {
+  padding: 16px;
+}
+
+/* ================= TABLE ================= */
+.table-container {
+  overflow-x: auto;
+}
+
+.notes-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+/* HEADER */
+.notes-table th {
+  background: #f5f7fa;
+  padding: 12px;
+  text-align: left;
+  font-size: 13px;
+}
+
+/* BODY */
+.notes-table td {
+  padding: 12px;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+/* USER CELL */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* AVATAR */
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #007bff;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.avatar.updated {
+  background: #28a745;
+}
+
+/* BUTTONS */
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn.edit { background: #ffc107; }
+.btn.save { background: #28a745; color: #fff; }
+.btn.cancel { background: #6c757d; color: #fff; }
+
+/* INPUT */
+.edit-input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* ================= MOBILE FIX ================= */
+@media (max-width: 768px) {
+
+  /* REMOVE TABLE HEADER */
+  .notes-table thead {
+    display: none;
+  }
+
+  /* BLOCK LAYOUT */
+  .notes-table,
+  .notes-table tbody,
+  .notes-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  /* CARD STYLE */
+  .notes-table tr {
+    background: #fff;
+    margin-bottom: 14px;
+    padding: 14px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  /* EACH ROW ITEM */
+  .notes-table td {
+    display: flex;
+    flex-direction: column;   /* 🔥 KEY FIX */
+    align-items: flex-start;  /* 🔥 ALIGN LEFT */
+    padding: 6px 0;
+    border: none;
+  }
+
+  /* LABEL */
+  .notes-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 2px;
+    font-size: 12px;
+  }
+
+  /* FIX TEXT */
+  .note-text {
+    width: 100%;
+  }
+
+  /* USER CELL FIX */
+  .user-cell {
+    justify-content: flex-start;
+  }
+
+  /* ACTION BUTTONS */
+  .actions {
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+}

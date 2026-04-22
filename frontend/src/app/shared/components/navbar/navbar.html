@@ -2,17 +2,116 @@
 
   <h3 class="navbar-title">CRM Dashboard</h3>
 
-  <div class="navbar-profile" (click)="toggleDropdown()">
-
-    <div class="profile-avatar">
-      👤
-    </div>
+  <div class="navbar-profile" (click)="toggleDropdown(); $event.stopPropagation()">
+    <div class="profile-avatar">👤</div>
 
     <div class="profile-dropdown" *ngIf="showDropdown">
-      <p class="dropdown-item" (click)="goToProfile()">Edit Profile</p>
+      <p class="dropdown-item" (click)="openProfile($event)">Edit Profile</p>
       <p class="dropdown-item logout" (click)="logout()">Logout</p>
     </div>
-
   </div>
+
+  <!-- Profile Panel -->
+  <div class="profile-panel" *ngIf="showProfile" (click)="$event.stopPropagation()">
+
+    <div class="profile-panel__header">
+      <h3>Edit Profile</h3>
+      <button class="profile-panel__close" (click)="closeProfile()">✕</button>
+    </div>
+
+    <!-- Avatar -->
+    <div class="profile-panel__avatar-wrap">
+      <img *ngIf="previewUrl" [src]="previewUrl" class="profile-panel__avatar-img" />
+      <div *ngIf="!previewUrl" class="profile-panel__avatar-placeholder">👤</div>
+      <label class="profile-panel__avatar-btn">
+        Change Photo
+        <input type="file" accept="image/*" (change)="onImageChange($event)" hidden />
+      </label>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSave()" #profileForm="ngForm" class="profile-panel__form">
+
+      <div class="profile-panel__group">
+        <label>Username</label>
+        <input 
+  type="text" 
+  [(ngModel)]="profile.name" 
+  name="username" 
+  required
+  #username="ngModel"
+  placeholder="Enter username" 
+/>
+<div *ngIf="username.invalid && username.touched" class="error">
+  Username is required
+</div>
+      </div>
+
+      <div class="profile-panel__group">
+        <label>Email</label>
+        <input 
+  type="email" 
+  [(ngModel)]="profile.email" 
+  name="email" 
+  required
+  #email="ngModel"
+/>
+<div *ngIf="email.invalid && email.touched" class="error">
+  Valid email is required
+</div>
+      </div>
+
+      <div class="profile-panel__group">
+        <label>Mobile Number</label>
+        <input 
+  type="tel" 
+  [(ngModel)]="profile.phone" 
+  name="mobile" 
+  required
+  pattern="[0-9]{10}"
+  #mobile="ngModel"
+/>
+<div *ngIf="mobile.invalid && mobile.touched" class="error">
+  Enter valid 10 digit number
+</div>
+      </div>
+
+      <div class="profile-panel__group">
+        <label>Date of Birth</label>
+        <input type="date" [(ngModel)]="profile.dob" name="dob" />
+      </div>
+
+      <div class="profile-panel__group">
+        <label>Language</label>
+        <select [(ngModel)]="profile.language" name="language">
+          <option *ngFor="let lang of languages" [value]="lang">{{ lang }}</option>
+        </select>
+      </div>
+
+      <div class="profile-panel__group">
+        <label>Address</label>
+        <textarea [(ngModel)]="profile.address" name="address" rows="3" placeholder="Enter address"></textarea>
+      </div>
+
+      <div *ngIf="successMessage" class="profile-panel__success">
+        ✓ {{ successMessage }}
+      </div>
+
+     <button 
+  type="submit" 
+  class="profile-panel__btn"
+  [disabled]="profileForm.invalid"
+>
+  Save Changes
+</button>
+<div *ngIf="toastMessage" class="toast" [ngClass]="toastType">
+  {{ toastMessage }}
+</div>
+
+    </form>
+  </div>
+
+  <!-- Overlay -->
+  <div class="profile-panel__overlay" *ngIf="showProfile" (click)="closeProfile()"></div>
 
 </div>

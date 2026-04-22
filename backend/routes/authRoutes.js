@@ -1,7 +1,8 @@
-const express = require("express");
+import express from "express";
+import authMiddleware from "../middleware/authMiddleware.js";
+import { signup, login, logout, loggedIn } from "../controllers/authController.js";
+
 const router = express.Router();
-const authMiddleware = require("../middleware/authMiddleware");
-const { signup, login, logout } = require("../controllers/authController");
 
 
 
@@ -9,5 +10,6 @@ const { signup, login, logout } = require("../controllers/authController");
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", authMiddleware, logout);
+router.get("/loggedIn", authMiddleware, loggedIn);
 
-module.exports = router;
+export default router;

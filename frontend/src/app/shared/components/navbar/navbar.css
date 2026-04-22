@@ -1,4 +1,4 @@
-/* Navbar */
+/* ================= NAVBAR ================= */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -6,19 +6,24 @@
   padding: 14px 20px;
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  /* FIX 1: sticky works here because .main-content uses
+     overflow-y: auto (not hidden), so sticky is respected.
+     z-index raised to 200 so it sits above page content
+     but below the mobile sidebar drawer (1200) and overlay (1100). */
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 200;
 }
 
-/* Title */
+/* ================= TITLE ================= */
 .navbar-title {
   font-size: 18px;
   font-weight: 600;
   color: #333;
 }
 
-/* Profile container */
+/* ================= PROFILE ================= */
 .navbar-profile {
   position: relative;
   cursor: pointer;
@@ -43,7 +48,7 @@
   transform: scale(1.05);
 }
 
-/* Dropdown */
+/* ================= DROPDOWN ================= */
 .profile-dropdown {
   position: absolute;
   top: 55px;
@@ -51,9 +56,14 @@
   width: 180px;
   background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   animation: fadeIn 0.2s ease-in-out;
+
+  /* FIX 2: dropdown must float above everything including
+     the mobile sidebar overlay (1100) and sidebar (1200).
+     Set higher so it's never buried when mobile menu is open. */
+  z-index: 1400;
 }
 
 /* Dropdown items */
@@ -61,7 +71,7 @@
   padding: 12px 16px;
   font-size: 14px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s;
 }
 
 .dropdown-item:hover {
@@ -72,7 +82,7 @@
   color: #e63946;
 }
 
-/* Animation */
+/* ================= ANIMATION ================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -84,13 +94,19 @@
   }
 }
 
-/* mobile */
+/* ================= MOBILE ================= */
 @media (max-width: 768px) {
 
   .navbar {
     padding: 10px 15px;
+
+    /* FIX 3: z-index stays consistent on mobile —
+       no need to override, same value works everywhere. */
   }
 
+  /* FIX 4: margin-left accounts for the ☰ toggle button
+     (fixed at left: 15px, ~44px wide) so title doesn't
+     overlap it. 55px is correct — kept as-is. */
   .navbar-title {
     font-size: 16px;
     margin-left: 55px;
@@ -102,6 +118,9 @@
     font-size: 12px;
   }
 
+  /* FIX 5: on mobile the dropdown was rendering behind the
+     page scroll area because no z-index was set. Already
+     fixed above (z-index: 1400 on .profile-dropdown). */
   .profile-dropdown {
     width: 150px;
     top: 50px;
@@ -110,5 +129,253 @@
   .dropdown-item {
     padding: 10px 12px;
     font-size: 13px;
+  }
+}
+
+
+/* profile css */
+
+/* ===== PANEL ===== */
+.profile-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+  z-index: 1000;
+  overflow-y: auto;
+  overflow-x: hidden;        /* ← prevent horizontal scroll */
+  padding: 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;    /* ← very important */
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+/* ===== HEADER ===== */
+.profile-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-panel__header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  margin-left: 50px;
+}
+
+.profile-panel__close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+.profile-panel__close:hover {
+  color: #1a1a1a;
+}
+
+/* ===== AVATAR ===== */
+.profile-panel__avatar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.profile-panel__avatar-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+
+.profile-panel__avatar-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.profile-panel__avatar-btn {
+  font-size: 13px;
+  color: #6366f1;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* ===== FORM ===== */
+.profile-panel__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 99999;
+  animation: slideIn 0.3s ease;
+}
+
+.toast.success {
+  background: #28a745;
+}
+
+.toast.error {
+  background: #dc3545;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.profile-panel__group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.profile-panel__group label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;      /* ← stop label wrapping/clipping */
+}
+
+.profile-panel__group input,
+.profile-panel__group select,
+.profile-panel__group textarea {
+  padding: 9px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;   /* ← inputs don't overflow */
+  transition: border 0.2s;
+  font-family: inherit;
+}
+
+.profile-panel__group input:focus,
+.profile-panel__group select:focus,
+.profile-panel__group textarea:focus {
+  border-color: #6366f1;
+}
+
+.profile-panel__group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ===== SUCCESS ===== */
+.profile-panel__success {
+  color: green;
+  font-size: 13px;
+  text-align: center;
+  padding: 8px;
+  background: #f0fff4;
+  border-radius: 6px;
+}
+
+/* ===== BUTTON ===== */
+.profile-panel__btn {
+  width: 100%;
+  padding: 12px;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+
+.profile-panel__btn:hover {
+  background: #4f46e5;
+}
+
+/* ===== OVERLAY ===== */
+.profile-panel__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 999;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .profile-panel {
+    width: 340px;
+    padding: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .profile-panel {
+    width: 100vw;
+    height: 100vh;
+    padding: 16px;
+    gap: 12px;
+    left: 0;              /* ← full screen, start from left */
+    right: 0;
+  }
+
+  .profile-panel__group input,
+  .profile-panel__group select,
+  .profile-panel__group textarea {
+    font-size: 16px;      /* ← prevents iOS zoom on focus */
+  }
+
+  .profile-panel__btn {
+    padding: 14px;
+    font-size: 15px;
+  }
+}
+
+/* Very small */
+@media (max-width: 360px) {
+  .profile-panel {
+    padding: 12px;
   }
 }

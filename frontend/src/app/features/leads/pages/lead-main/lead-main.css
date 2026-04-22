@@ -1,0 +1,97 @@
+/* ================= CONTAINER ================= */
+.tabs-container {
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* ================= TAB BUTTONS ================= */
+.tab-buttons {
+  display: flex;
+  gap: 12px;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 16px;
+  flex-wrap: wrap; /* important for mobile */
+}
+
+/* ================= BUTTON STYLE ================= */
+.tab-buttons button {
+  padding: 10px 18px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #555;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* HOVER EFFECT */
+.tab-buttons button:hover {
+  color: #007bff;
+}
+
+/* ACTIVE TAB */
+.tab-buttons button.active {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+  font-weight: 600;
+}
+
+/* ================= CONTENT AREA ================= */
+app-lead-profile,
+app-lead-notes {
+  display: block;
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* 📱 Mobile (small devices) */
+@media (max-width: 600px) {
+  .tab-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tab-buttons button {
+    width: 100%;
+    text-align: left;
+    border-bottom: none;
+    border-left: 4px solid transparent;
+  }
+
+  .tab-buttons button.active {
+    border-left: 4px solid #007bff;
+    border-bottom: none;
+    background: #f5f9ff;
+  }
+
+  app-lead-profile,
+  app-lead-notes {
+    padding: 12px;
+  }
+}
+
+/* 📲 Tablet */
+@media (min-width: 601px) and (max-width: 992px) {
+  .tab-buttons button {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+}
+
+/* 💻 Desktop */
+@media (min-width: 993px) {
+  .tabs-container {
+    padding: 24px;
+  }
+
+  .tab-buttons button {
+    font-size: 16px;
+  }
+}

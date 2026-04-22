@@ -1,0 +1,29 @@
+<div class="tabs-container">
+
+  <div class="tab-buttons">
+    <button 
+      (click)="activeTab = 'details'"
+      [class.active]="activeTab === 'details'">
+      Lead Details
+    </button>
+
+    <button 
+      (click)="activeTab = 'notes'"
+      [class.active]="activeTab === 'notes'">
+      Lead Notes
+    </button>
+  </div>
+
+  <!-- DETAILS -->
+  <app-lead-profile 
+    *ngIf="activeTab === 'details'"
+    [leadId]="leadId">
+  </app-lead-profile>
+
+  <!-- NOTES -->
+  <app-lead-notes 
+    *ngIf="activeTab === 'notes'"
+    [leadId]="leadId">
+  </app-lead-notes>
+
+</div>

@@ -35,14 +35,11 @@ export class Login {
   }
 
   this.auth.login(this.loginForm.value).subscribe({
-    next: (res: any) => {
-
-      //  save token
-      // localStorage.setItem("token", res.token);
-
-      //  ONLY navigate
-      this.router.navigate(['/dashboard']);
-     },
+   next: (res: any) => {
+  //  SAVE IN COOKIE
+  document.cookie = `user=${JSON.stringify(res.user)}; path=/`;
+  this.router.navigate(['/dashboard']);
+},
     error: (err) => {
       console.error(err);
     }

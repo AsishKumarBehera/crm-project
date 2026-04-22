@@ -1,5 +1,7 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+
+
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -10,8 +12,6 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Check tokenVersion in DB
     const user = await User.findById(decoded._id);
 
     if (!user || user.tokenVersion !== decoded.tokenVersion) {
@@ -22,6 +22,7 @@ const authMiddleware = async (req, res, next) => {
     next();
 
   } catch (error) {
+    console.log('❌ Auth error:', error.message);
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Token expired" });
     }
@@ -29,4 +30,4 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+export default authMiddleware;

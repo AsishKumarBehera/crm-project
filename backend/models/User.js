@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -37,7 +37,14 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
     },
 
-    // ADD THIS
+    address: {
+  type: String,
+  trim: true,
+},
+language: {
+  type: String,
+  default: 'English'
+},
     tokenVersion: {
       type: Number,
       default: 0,
@@ -46,4 +53,5 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+// module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);

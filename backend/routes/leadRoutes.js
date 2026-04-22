@@ -1,12 +1,16 @@
-const express = require("express");
+import express from "express";
+import { createLead, getLeads, updateLead, getLeadById } from "../controllers/leadController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 const router = express.Router();
 
-const { createLead, getLeads } = require("../controllers/leadController");
-const authMiddleware = require("../middleware/authMiddleware");
-
 // routes
-router.post("/createlead", authMiddleware, createLead);   
 router.get("/getleads", authMiddleware, getLeads);    
+router.post("/createlead", authMiddleware, createLead);
+router.put("/updatelead/:id", authMiddleware, updateLead); 
+
+router.get("/getLeadById/:id", authMiddleware, getLeadById);
+
+// router.post("/addNote/:id", authMiddleware, addNote);  
    
 
-module.exports = router;
+export default router;
