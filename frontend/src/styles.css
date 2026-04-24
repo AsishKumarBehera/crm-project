@@ -8,3 +8,50 @@ body {
 html, body {
   height: 100%;
 }
+
+:root {
+  --primary: #4f46e5;
+  --bg: #f8fafc;
+  --white: #fff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+}
+
+:root {
+  /* Colors */
+  --color-primary: #007bff;
+  --color-success: #28a745;
+  --color-title: #222;
+  --color-value: #333;
+  --color-label: #555;
+  --color-border: #e0e0e0;
+  --color-card-bg: #ffffff;
+  --color-input-bg: #f9f9f9;
+  --color-placeholder: #aaa;
+  --color-photo-text: #666;
+  
+  /* Spacing */
+  --card-padding: 24px;
+  --grid-gap: 20px;
+  --item-padding: 0;
+  --input-padding: 12px;
+  
+  /* Font sizes */
+  --title-font-size: 24px;
+  --label-font-size: 13px;
+  --value-font-size: 15px;
+  --photo-font-size: 14px;
+  
+  /* Font weights */
+  --title-weight: 600;
+  --label-weight: 500;
+  --value-weight: 400;
+  --photo-weight: 500;
+  
+  /* Border radius */
+  --card-radius: 16px;
+  --item-radius: 8px;
+  --input-radius: 8px;
+  --button-radius: 8px;
+}

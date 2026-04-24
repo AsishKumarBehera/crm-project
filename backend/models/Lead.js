@@ -29,7 +29,7 @@ const leadSchema = new mongoose.Schema({
   //  STATUS ENUM (optional but recommended)
   status: {
     type: String,
-    enum: ['Active', 'Inactive'],
+    enum: ['Active', 'Inactive', 'Pending'],
     default: 'Active'
   },
 

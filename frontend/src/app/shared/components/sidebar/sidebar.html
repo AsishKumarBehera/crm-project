@@ -1,9 +1,5 @@
 <!-- ☰ Mobile Menu Button -->
-<div 
-  class="sidebar__mobile-toggle" 
-  [class.sidebar__mobile-toggle--hide]="isOpen"
-  (click)="openSidebar()"
->
+<div class="sidebar__mobile-toggle" [class.sidebar__mobile-toggle--hide]="isOpen" (click)="openSidebar()">
   ☰
 </div>
 
@@ -22,29 +18,33 @@
 
     <ul class="sidebar__menu">
 
-      <li 
-        class="sidebar__item"
-        (click)="goToDashboard()"
-      >
+      <li class="sidebar__item" (click)="goToDashboard()">
         <span class="sidebar__icon">🏠</span>
         <span class="sidebar__text">Dashboard</span>
       </li>
 
-      <li 
-        class="sidebar__item"
-        (click)="goToPublisher()"
-      >
+      <li class="sidebar__item" (click)="goToPublisher()">
         <span class="sidebar__icon">📢</span>
         <span class="sidebar__text">Publisher</span>
       </li>
 
-      <li 
-        class="sidebar__item"
-        (click)="goToLeads()"
-      >
+      <li class="sidebar__item" (click)="toggleLeadsMenu()">
         <span class="sidebar__icon">📋</span>
         <span class="sidebar__text">Leads</span>
+        <span class="sidebar__arrow">▼</span>
       </li>
+
+      <ul *ngIf="isLeadsOpen" class="sidebar__submenu">
+
+        <li class="sidebar__subitem" (click)="goToLeads()">
+          All Leads
+        </li>
+
+        <li class="sidebar__subitem" (click)="goToUploadCsv()">
+          Upload Lead CSV
+        </li>
+
+      </ul>
 
     </ul>
   </div>
@@ -54,18 +54,12 @@
 
     <ul class="sidebar__menu">
 
-      <li 
-        class="sidebar__item"
-        (click)="goToDashboard()"
-      >
+      <li class="sidebar__item" (click)="goToDashboard()">
         <span class="sidebar__icon"></span>
         <span class="sidebar__text">Notes</span>
       </li>
 
-      <li 
-        class="sidebar__item"
-        (click)="goToPublisher()"
-      >
+      <li class="sidebar__item" (click)="goToPublisher()">
         <span class="sidebar__icon"></span>
         <span class="sidebar__text">Report & Activity</span>
       </li>
@@ -78,18 +72,12 @@
 
     <ul class="sidebar__menu">
 
-      <li 
-        class="sidebar__item"
-        (click)="goToDashboard()"
-      >
+      <li class="sidebar__item" (click)="goToDashboard()">
         <span class="sidebar__icon"></span>
         <span class="sidebar__text">Setting</span>
       </li>
 
-      <li 
-        class="sidebar__item"
-        (click)="goToPublisher()"
-      >
+      <li class="sidebar__item" (click)="goToPublisher()">
         <span class="sidebar__icon"></span>
         <span class="sidebar__text">Access Control</span>
       </li>
@@ -100,14 +88,5 @@
 </div>
 
 <!-- Overlay -->
-<div 
-  class="sidebar__overlay" 
-  *ngIf="isOpen" 
-  (click)="closeSidebar()">
+<div class="sidebar__overlay" *ngIf="isOpen" (click)="closeSidebar()">
 </div>
-
-
-
-
-
-

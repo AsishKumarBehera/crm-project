@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 import { HostListener, ElementRef } from '@angular/core';
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -21,15 +22,17 @@ export class Navbar implements OnInit {
   errorMessage = '';
   isLoading = false;
   isSaving = false;
-languages = ['English', 'Hindi', 'Tamil', 'Telugu', 'Kannada'];
+  isLoggingOut = false;
+  languages = ['English', 'Hindi', 'Tamil', 'Telugu', 'Kannada'];
+  
   profile = {
     name: '',
     email: '',
     phone: '',
     dob: '',
     profilePic: '',
-  address: '',
-  language: 'English'
+    address: '',
+    language: 'English'
   };
 
   constructor(
@@ -38,15 +41,14 @@ languages = ['English', 'Hindi', 'Tamil', 'Telugu', 'Kannada'];
     private userService: UserService,
     private eRef: ElementRef,
     private cd: ChangeDetectorRef,
-
   ) {}
 
   @HostListener('document:click', ['$event'])
-clickOutside(event: Event) {
-  if (!this.eRef.nativeElement.contains(event.target)) {
-    this.showDropdown = false;
+  clickOutside(event: Event) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
   }
-}
 
   ngOnInit() {
     this.loadProfile();
@@ -80,7 +82,6 @@ clickOutside(event: Event) {
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
     this.errorMessage = '';
-    
   }
 
   // ── Open profile panel
@@ -130,29 +131,40 @@ clickOutside(event: Event) {
     });
   }
 
+  // ── Toast notification
   toastMessage: string = '';
-toastType: string = 'success'; // success | error
-showToast(message: string, type: string = 'success') {
-  this.toastMessage = message;
-  this.toastType = type;
+  toastType: string = 'success'; // success | error
+  
+  showToast(message: string, type: string = 'success') {
+    this.toastMessage = message;
+    this.toastType = type;
+    setTimeout(() => {
+      this.toastMessage = '';
+    }, 3000);
+  }
 
-  setTimeout(() => {
-    this.toastMessage = '';
-  }, 3000);
-}
+  // ── Logout
+  logout() {
+    if (confirm('Are you sure you want to logout?')) {
+      this.isLoggingOut = true;
+      this.showDropdown = false;
 
- logout() {
-  this.showDropdown = false;
+      console.log('🔐 User initiated logout');
 
-  // call backend to clear the cookie
-  this.auth.logout().subscribe({
-    next: () => {
-      this.router.navigate(['/login']);
-    },
-    error: () => {
-      // even if error, still navigate to login
-      this.router.navigate(['/login']);
+      // Call backend to clear the cookie
+      this.auth.logout().subscribe({
+        next: () => {
+          console.log('✅ Logout successful - token cleared from localStorage');
+          // ✅ AuthService.logout() now automatically clears token via tap()
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          console.error('❌ Logout error:', err);
+          // Even if error, still clear token and navigate to login
+          this.auth.clearToken();
+          this.router.navigate(['/login']);
+        }
+      });
     }
-  });
-}
+  }
 }

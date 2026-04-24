@@ -1,0 +1,215 @@
+@if (isOpen) {
+<div class="lead__modal">
+  <div class="lead__overlay" (click)="onOverlayClick($event)"></div>
+
+  <div class="lead__modal-content filter-modal">
+    <div class="modal-header">
+      <h3>Filter Leads</h3>
+      <button class="close-btn" (click)="close()">✖</button>
+    </div>
+
+    <div class="filter-panel" (click)="$event.stopPropagation()">
+
+      <!-- STAGE -->
+      <div class="filter-group">
+        <small>Stage</small>
+        <div class="filter-box" (click)="toggleDropdown('stage')">
+          @if (filters.stage.length === 0) {
+            <span>{{ getSelectedText(filters.stage, 'stage') }}</span>
+          } @else {
+            <div class="selected-chips">
+              @for (item of getSelectedItems('stage'); track item.value) {
+                <span class="selected-chip">
+                  {{ item.label }}
+                  <button type="button" (click)="removeSelectedValue($event, 'stage', item.value)">x</button>
+                </span>
+              }
+            </div>
+          }
+          <span class="arrow" [class.open]="openDropdown === 'stage'">▾</span>
+        </div>
+        @if (openDropdown === 'stage') {
+          <div class="filter-dropdown-wrapper">
+            <div class="filter-dropdown">
+              <input type="text" class="filter-dropdown__search" placeholder="Search stage..."
+                [(ngModel)]="dropdownSearch.stage" (click)="$event.stopPropagation()" />
+              <label class="filter-dropdown__select-all">
+                <input type="checkbox"
+                  [checked]="isAllSelected(filters.stage, getFilteredOptions(stageOptions, 'stage'))"
+                  [indeterminate]="isPartiallySelected(filters.stage, getFilteredOptions(stageOptions, 'stage'))"
+                  (change)="toggleSelectAll($event, 'stage', getFilteredOptions(stageOptions, 'stage'))" />
+                Select all
+              </label>
+              @for (s of getFilteredOptions(stageOptions, 'stage'); track s) {
+                <label>
+                  <input type="checkbox" [checked]="filters.stage.includes(s)"
+                    (change)="onCheckboxChange($event, s, 'stage')"  />
+                  {{ s }}
+                </label>
+              }
+              @if (getFilteredOptions(stageOptions, 'stage').length === 0) {
+                <p class="filter-dropdown__empty">No stage found</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- STATUS -->
+      <div class="filter-group">
+        <small>Status</small>
+        <div class="filter-box" (click)="toggleDropdown('status')">
+          @if (filters.status.length === 0) {
+            <span>{{ getSelectedText(filters.status, 'status') }}</span>
+          } @else {
+            <div class="selected-chips">
+              @for (item of getSelectedItems('status'); track item.value) {
+                <span class="selected-chip">
+                  {{ item.label }}
+                  <button type="button" (click)="removeSelectedValue($event, 'status', item.value)">x</button>
+                </span>
+              }
+            </div>
+          }
+          <span class="arrow" [class.open]="openDropdown === 'status'">▾</span>
+        </div>
+        @if (openDropdown === 'status') {
+          <div class="filter-dropdown">
+            <input type="text" class="filter-dropdown__search" placeholder="Search status..."
+              [(ngModel)]="dropdownSearch.status" (click)="$event.stopPropagation()" />
+            <label class="filter-dropdown__select-all">
+              <input type="checkbox"
+                [checked]="isAllSelected(filters.status, getFilteredOptions(statusOptions, 'status'))"
+                [indeterminate]="isPartiallySelected(filters.status, getFilteredOptions(statusOptions, 'status'))"
+                (change)="toggleSelectAll($event, 'status', getFilteredOptions(statusOptions, 'status'))" />
+              Select all
+            </label>
+            @for (s of getFilteredOptions(statusOptions, 'status'); track s) {
+              <label>
+                <input type="checkbox" [checked]="filters.status.includes(s)"
+                  (change)="onCheckboxChange($event, s, 'status')" />
+                {{ s }}
+              </label>
+            }
+            @if (getFilteredOptions(statusOptions, 'status').length === 0) {
+              <p class="filter-dropdown__empty">No status found</p>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- CREATED BY -->
+      <div class="filter-group">
+        <small>Created By</small>
+        <div class="filter-box" (click)="toggleDropdown('createdBy')">
+          @if (filters.createdBy.length === 0) {
+            <span>{{ getUserSelectedText(filters.createdBy) }}</span>
+          } @else {
+            <div class="selected-chips">
+              @for (item of getSelectedItems('createdBy'); track item.value) {
+                <span class="selected-chip">
+                  {{ item.label }}
+                  <button type="button" (click)="removeSelectedValue($event, 'createdBy', item.value)">x</button>
+                </span>
+              }
+            </div>
+          }
+          <span class="arrow" [class.open]="openDropdown === 'createdBy'">▾</span>
+        </div>
+        @if (openDropdown === 'createdBy') {
+          <div class="filter-dropdown">
+            <input type="text" class="filter-dropdown__search" placeholder="Search user..."
+              [(ngModel)]="dropdownSearch.createdBy" (click)="$event.stopPropagation()" />
+            <label class="filter-dropdown__select-all">
+              <input type="checkbox"
+                [checked]="isAllSelected(filters.createdBy, getFilteredUserIds('createdBy'))"
+                [indeterminate]="isPartiallySelected(filters.createdBy, getFilteredUserIds('createdBy'))"
+                (change)="toggleSelectAll($event, 'createdBy', getFilteredUserIds('createdBy'))" />
+              Select all
+            </label>
+            @for (u of getFilteredUsers('createdBy'); track u._id) {
+              <label>
+                <input type="checkbox" [checked]="filters.createdBy.includes(u._id)"
+                  (change)="onCheckboxChange($event, u._id, 'createdBy')" />
+                {{ u.name }}
+              </label>
+            }
+            @if (getFilteredUsers('createdBy').length === 0) {
+              <p class="filter-dropdown__empty">No user found</p>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- UPDATED BY -->
+      <div class="filter-group">
+        <small>Updated By</small>
+        <div class="filter-box" (click)="toggleDropdown('updatedBy')">
+          @if (filters.updatedBy.length === 0) {
+            <span>{{ getUserSelectedText(filters.updatedBy) }}</span>
+          } @else {
+            <div class="selected-chips">
+              @for (item of getSelectedItems('updatedBy'); track item.value) {
+                <span class="selected-chip">
+                  {{ item.label }}
+                  <button type="button" (click)="removeSelectedValue($event, 'updatedBy', item.value)">x</button>
+                </span>
+              }
+            </div>
+          }
+          <span class="arrow" [class.open]="openDropdown === 'updatedBy'">▾</span>
+        </div>
+        @if (openDropdown === 'updatedBy') {
+          <div class="filter-dropdown">
+            <input type="text" class="filter-dropdown__search" placeholder="Search user..."
+              [(ngModel)]="dropdownSearch.updatedBy" (click)="$event.stopPropagation()" />
+            <label class="filter-dropdown__select-all">
+              <input type="checkbox"
+                [checked]="isAllSelected(filters.updatedBy, getFilteredUserIds('updatedBy'))"
+                [indeterminate]="isPartiallySelected(filters.updatedBy, getFilteredUserIds('updatedBy'))"
+                (change)="toggleSelectAll($event, 'updatedBy', getFilteredUserIds('updatedBy'))" />
+              Select all
+            </label>
+            @for (u of getFilteredUsers('updatedBy'); track u._id) {
+              <label>
+                <input type="checkbox" [checked]="filters.updatedBy.includes(u._id)"
+                  (change)="onCheckboxChange($event, u._id, 'updatedBy')" />
+                {{ u.name }}
+              </label>
+            }
+            @if (getFilteredUsers('updatedBy').length === 0) {
+              <p class="filter-dropdown__empty">No user found</p>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- CREATED AT -->
+      <div class="filter-group date-group date-group--created">
+        <small>Created At</small>
+        <input ngxDaterangepickerMd [(ngModel)]="createdRange" [ranges]="ranges"
+          [showCustomRangeLabel]="true" [showClearButton]="true" [autoApply]="false"
+          [linkedCalendars]="false" [opens]="'left'" [drops]="'down'"
+          placeholder="Select date range"
+          class="lead__input" />
+      </div>
+
+      <!-- UPDATED AT -->
+      <div class="filter-group date-group date-group--updated">
+        <small>Updated At</small>
+        <input ngxDaterangepickerMd [(ngModel)]="updatedRange" [ranges]="ranges"
+          [showCustomRangeLabel]="true" [showClearButton]="true" [autoApply]="false"
+          [linkedCalendars]="false" [opens]="'left'" [drops]="'down'"
+          placeholder="Select date range"
+          class="lead__input" />
+      </div>
+
+    </div>
+
+    <div class="lead__form-actions">
+      <button class="btn reset" (click)="reset()">Reset</button>
+      <button class="btn apply" (click)="apply()">Apply</button>
+    </div>
+  </div>
+</div>
+}
