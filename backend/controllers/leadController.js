@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Lead from "../models/Lead.js";
 
 const STAGES = ['New', 'Contacted', 'Qualified', 'Proposal', 'Closed'];
-const STATUS = ['Active', 'Inactive'];
+const STATUS = ['Active', 'Inactive', 'Pending'];
 
 // CREATE LEAD
 export const createLead = async (req, res) => {
@@ -92,13 +92,23 @@ export const getLeads = async (req, res) => {
     let filter = {};
 
     //  Stage & Status
-    if (stage) filter.stage = stage;
-    if (status) filter.status = status;
-   if (createdBy) {
-  filter.createdBy = new mongoose.Types.ObjectId(String(createdBy));
+    if (stage) {
+  const stages = stage.split(',');
+  filter.stage = { $in: stages };
 }
+
+if (status) {
+  const statuses = status.split(',');
+  filter.status = { $in: statuses };
+}
+   if (createdBy) {
+  const ids = createdBy.split(',').map(id => new mongoose.Types.ObjectId(id));
+  filter.createdBy = { $in: ids };
+}
+
 if (updatedBy) {
-  filter.updatedBy = new mongoose.Types.ObjectId(String(updatedBy));
+  const ids = updatedBy.split(',').map(id => new mongoose.Types.ObjectId(id));
+  filter.updatedBy = { $in: ids };
 }
 //  CREATED DATE RANGE
 if (createdFrom || createdTo) {

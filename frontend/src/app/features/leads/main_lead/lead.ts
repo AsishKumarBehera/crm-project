@@ -10,13 +10,18 @@ import { LeadService } from '../../../core/services/lead.service';
 import { NoteService } from '../../../core/services/note.service';
 import { UserService } from '../../../core/services/user.service';
 import { SeletonLoder } from '../../../seleton-loder/seleton-loder';
-import utc from 'dayjs/plugin/utc';
-import dayjs from 'dayjs';
 
-dayjs.extend(utc);
-/* 
-   Types
- */
+//  Step 1: import pipe + validators
+import { LeadBadgePipe } from './lead-badge.pipe';
+import { onlyNumbers } from './lead.validators';
+
+//  Step 2: import services
+import { LeadFilterService } from './services/lead-filter.service';
+import { LeadPaginationService } from './services/lead-pagination.service';
+import { LeadModalComponent } from '../main_lead/modals/lead-model/lead-modal.component';
+import { LeadNotesModalComponent } from '../main_lead/modals/note-model/lead-notes-modal.component';
+import { LeadFilterModalComponent } from '../main_lead/modals/filter-model/lead-filter-modal.component';
+
 interface LeadType {
   _id: string;
   name: string;
@@ -26,20 +31,20 @@ interface LeadType {
   status: LeadStatus;
   createdAt: string;
   updatedAt: string;
-  createdBy: {
-  _id: string;
-  name: string;
-} | null;
-
-  updatedBy: {
-  _id: string;
-  name: string;
-} | null;
+  createdBy: { _id: string; name: string } | null;
+  updatedBy: { _id: string; name: string } | null;
 }
-
 type LeadStage = 'New' | 'Contacted' | 'Qualified' | 'Proposal' | 'Closed';
 type LeadStatus = 'Active' | 'Inactive' | 'Pending';
 type NewLead = Omit<LeadType, 'createdAt' | 'updatedAt' | 'createdBy' | 'updatedBy'>;
+type ActiveFilterType = 'stage' | 'status' | 'createdBy' | 'updatedBy' | 'createdDate' | 'updatedDate';
+
+interface ActiveFilterChip {
+  type: ActiveFilterType;
+  label: string;
+  value: string;
+}
+
 const defaultLead = (): NewLead => ({
   _id: '',
   name: '',
@@ -49,188 +54,153 @@ const defaultLead = (): NewLead => ({
   status: 'Active',
 });
 
-/* 
-   Component
- */
 @Component({
   selector: 'app-lead',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, NgClass, FormsModule, SeletonLoder, RouterModule, NgxDaterangepickerMd],
+  imports: [
+    NgIf,
+    NgFor,
+    DatePipe,
+    NgClass,
+    FormsModule,
+    SeletonLoder,
+    RouterModule,
+    NgxDaterangepickerMd,
+    LeadBadgePipe,
+    LeadModalComponent,
+    LeadNotesModalComponent,
+    LeadFilterModalComponent, //  Step 1: pipe
+  ],
   templateUrl: './lead.html',
   styleUrl: './lead.css',
 })
 export class LeadComponent implements OnInit, OnDestroy {
-
-  /* ── Dropdown Options ── */
-  readonly stageOptions:  LeadStage[] = ['New', 'Contacted', 'Qualified', 'Proposal', 'Closed'];
+  readonly stageOptions: LeadStage[] = ['New', 'Contacted', 'Qualified', 'Proposal', 'Closed'];
   readonly statusOptions: LeadStatus[] = ['Active', 'Inactive', 'Pending'];
-  userOptions: any[] = []; // populated from cookie on init
-
-  /* ── Table Headers ── */
+  userOptions: any[] = [];
   headers = ['ID', 'Name', 'Email', 'Phone', 'Stage', 'Status', 'Created', 'Action'];
 
-  /* ── Leads Data ── */
-  leads:   LeadType[] = [];
+  leads: LeadType[] = [];
   newLead: NewLead = defaultLead();
 
-  /* ── Loading / Error ── */
   isLoading = false;
   errorMessage = '';
-
-  /* ── Field Errors ── */
   phoneError = '';
   emailError = '';
 
-  /* ── Filters ── */
-  filters = {
-    stage:     '',
-    status:    '',
-    search:    '',
-    sortBy:    'createdAt',
-    order:     'desc',
-    createdFrom: '',
-createdTo: '',
-updatedFrom: '',
-updatedTo: '',
-    createdBy: '',
-    updatedBy: '',
-  };
-
-
-  // date range 
-  isCustomRange = false;
-
-  setDateRange(type: string) {
-  const today = new Date();
-  let from = new Date();
-  let to = new Date();
-
-  this.isCustomRange = false;
-
-  switch (type) {
-
-    case 'today':
-      from = new Date();
-      to = new Date();
-      break;
-
-    case 'yesterday':
-      from = new Date();
-      from.setDate(today.getDate() - 1);
-      to = new Date(from);
-      break;
-
-    case 'last7':
-      from = new Date();
-      from.setDate(today.getDate() - 6);
-      to = new Date();
-      break;
-
-    case 'month':
-      from = new Date(today.getFullYear(), today.getMonth(), 1);
-      to = new Date();
-      break;
-
-    case 'custom':
-      this.isCustomRange = true;
-      return;
-  }
-
-  this.filters.createdFrom = this.formatDate(from);
-  this.filters.createdTo = this.formatDate(to);
-}
-formatDate(date: Date): string {
-  return date.toISOString().split('T')[0];
-}
-
-  /* ── Filter Panel ── */
   showFilter = false;
-
-  /* ── Pagination ── */
-  currentPage = 1;
-  itemsPerPage = 10;
-
-  /* ── Modal ── */
   showModal = false;
   isEditMode = false;
   selectedLeadId: string | null = null;
 
-  /* ── Notes Modal ── */
   showNotesModal = false;
   selectedLeadForNote: any = null;
-  noteText       = '';
+  noteText = '';
+  isSaving = false;
 
-  /* ── Action Menu ── */
   activeMenu: string | null = null;
 
-  /* ── Subscriptions ── */
-  private leadSub!:      Subscription;
-  private createSub!:    Subscription;
+  private leadSub!: Subscription;
+  private createSub!: Subscription;
   private searchSubject = new Subject<string>();
 
- createdRange: any = null;
-updatedRange: any = null;
-isValidRange(range: any): boolean {
-  return range && range.startDate && range.endDate && 
-         range.startDate.isValid() && range.endDate.isValid();
-}
-
-ranges: any = {
-  'Today': [dayjs(), dayjs()],
-  'Yesterday': [dayjs().subtract(1, 'day'), dayjs().subtract(1, 'day')],
-  'Last 7 Days': [dayjs().subtract(6, 'day'), dayjs()],
-  'This Month': [dayjs().startOf('month'), dayjs().endOf('month')],
-  'Last Month': [
-    dayjs().subtract(1, 'month').startOf('month'),
-    dayjs().subtract(1, 'month').endOf('month')
-  ]
-};
-
-
-
-
-  /* 
-     Constructor
-   */
   constructor(
     private leadService: LeadService,
     private noteService: NoteService,
     private userService: UserService,
     private router: Router,
     private cd: ChangeDetectorRef,
+    //  Step 2: inject services
+    public filterSvc: LeadFilterService,
+    public pageSvc: LeadPaginationService,
   ) {}
 
-  /* 
-     Lifecycle
-   */
-  ngOnInit(): void {
-
-    setTimeout(() => {
-    this.createdRange = null;
-    this.updatedRange = null;
-    this.cd.detectChanges();
-  }, 0);
-    // Read logged-in user name from cookie
-    this.userService.getUsers().subscribe({
-  next: (res: any) => {
-    this.userOptions = res.users;
-    console.log("Users loaded:", this.userOptions); // debug
-  },
-  error: (err) => {
-    console.log("User API error:", err);
+  // ── Convenience getters — forward to services ────────────────────────────
+  // These let the HTML keep working with minimal changes (e.g. filters.search)
+  get filters() {
+    return this.filterSvc.filters;
   }
-});
+  get currentPage() {
+    return this.pageSvc.currentPage;
+  }
+  set currentPage(v) {
+    this.pageSvc.currentPage = v;
+  }
+  get itemsPerPage() {
+    return this.pageSvc.itemsPerPage;
+  }
+  set itemsPerPage(v) {
+    this.pageSvc.itemsPerPage = v;
+  }
+  get totalPages() {
+    return this.pageSvc.totalPages;
+  }
+  get totalLeads() {
+    return this.leads.length;
+  }
 
-    // Debounced search
+  get paginatedLeads(): LeadType[] {
+    return this.pageSvc.paginate(this.leads);
+  }
+
+  get activeFilterChips(): ActiveFilterChip[] {
+    const chips: ActiveFilterChip[] = [];
+
+    this.filters.stage.forEach((stage: string) => {
+      chips.push({ type: 'stage', label: 'Stage', value: stage });
+    });
+
+    this.filters.status.forEach((status: string) => {
+      chips.push({ type: 'status', label: 'Status', value: status });
+    });
+
+    this.filters.createdBy.forEach((userId: string) => {
+      chips.push({ type: 'createdBy', label: 'Created By', value: userId });
+    });
+
+    this.filters.updatedBy.forEach((userId: string) => {
+      chips.push({ type: 'updatedBy', label: 'Updated By', value: userId });
+    });
+
+    if (this.filters.createdFrom || this.filters.createdTo) {
+      chips.push({
+        type: 'createdDate',
+        label: 'Created At',
+        value: `${this.filters.createdFrom || 'Start'} - ${this.filters.createdTo || 'End'}`,
+      });
+    }
+
+    if (this.filters.updatedFrom || this.filters.updatedTo) {
+      chips.push({
+        type: 'updatedDate',
+        label: 'Updated At',
+        value: `${this.filters.updatedFrom || 'Start'} - ${this.filters.updatedTo || 'End'}`,
+      });
+    }
+
+    return chips;
+  }
+
+  // ── Lifecycle ────────────────────────────────────────────────────────────
+  ngOnInit(): void {
+    this.userService.getUsers().subscribe({
+      next: (res: any) => {
+        this.userOptions = res.users;
+      },
+      error: (err) => {
+        console.log('User API error:', err);
+      },
+    });
+
     this.searchSubject
       .pipe(
         debounceTime(800),
         distinctUntilChanged(),
-        switchMap((searchValue) => {
+        switchMap((search) => {
           this.isLoading = true;
           this.errorMessage = '';
-          this.filters.search = searchValue;
-          return this.leadService.getLeads(this.buildParams());
+          this.filterSvc.filters.search = search;
+          return this.leadService.getLeads(this.filterSvc.buildParams());
         }),
       )
       .subscribe({
@@ -255,53 +225,17 @@ ranges: any = {
     this.searchSubject.complete();
   }
 
-  /* 
-     Helpers
-   */
-
-  // Build query params from filters (single source of truth)
-  private buildParams(): Record<string, string> {
-    const p: Record<string, string> = {};
-    if (this.filters.stage)     p['stage'] = this.filters.stage;
-    if (this.filters.status)    p['status'] = this.filters.status;
-    if (this.filters.search)    p['search'] = this.filters.search;
-    if (this.filters.sortBy)    p['sortBy'] = this.filters.sortBy;
-    if (this.filters.order)     p['order'] = this.filters.order;
-    if (this.filters.createdFrom) p['createdFrom'] = this.filters.createdFrom;
-if (this.filters.createdTo) p['createdTo'] = this.filters.createdTo;
-    if (this.filters.updatedFrom) p['updatedFrom'] = this.filters.updatedFrom;
-if (this.filters.updatedTo) p['updatedTo'] = this.filters.updatedTo;
-    if (this.filters.createdBy) p['createdBy'] = this.filters.createdBy;
-    if (this.filters.updatedBy) p['updatedBy'] = this.filters.updatedBy;
-    console.log('buildParams sending:', p);
-    return p;
-  }
-
-  onFilterChange() {
-  this.currentPage = 1;
-  this.loadLeads();
-}
-
-  // Read a cookie by name
-  getCookie(name: string): string {
-    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    return match ? decodeURIComponent(match[2]) : '';
-  }
-
-  /* 
-     Load Leads
-   */
+  // ── Load leads ───────────────────────────────────────────────────────────
   loadLeads(): void {
-    console.log("Selected createdBy:", this.filters.createdBy);
-    this.currentPage = 1;
+    this.pageSvc.reset();
     this.leadSub?.unsubscribe();
-
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.leadSub = this.leadService.getLeads(this.buildParams()).subscribe({
+    this.leadSub = this.leadService.getLeads(this.filterSvc.buildParams()).subscribe({
       next: (res: any) => {
         this.leads = res.data;
+        this.pageSvc.setTotal(this.leads.length);
         this.isLoading = false;
         this.cd.detectChanges();
       },
@@ -320,205 +254,114 @@ if (this.filters.updatedTo) p['updatedTo'] = this.filters.updatedTo;
     });
   }
 
-  /* 
-     Search
-   */
+  // ── Search ───────────────────────────────────────────────────────────────
+  onSearchClick(): void {
+    this.pageSvc.reset();
+    this.loadLeads();
+  }
   onSearchChange(): void {
     this.errorMessage = '';
-    this.currentPage = 1;
-    this.isLoading = false;
     this.searchSubject.next(this.filters.search);
   }
 
-  onSearchClick(): void {
-    this.currentPage = 1;
-    this.loadLeads();
-  }
-  
-  /* 
-     Filters
-   */
+  // ── Filter delegates ─────────────────────────────────────────────────────
   toggleFilter(): void {
     this.showFilter = !this.showFilter;
   }
-applyFilters() {
-  // CREATED RANGE
-  if (this.createdRange?.startDate && this.createdRange?.endDate) {
-    const start = this.createdRange.startDate;
-    const end = this.createdRange.endDate;
 
-    // handle both moment and dayjs objects
-    this.filters.createdFrom = typeof start.format === 'function'
-      ? start.format('YYYY-MM-DD')
-      : dayjs(start).format('YYYY-MM-DD');
-
-    this.filters.createdTo = typeof end.format === 'function'
-      ? end.format('YYYY-MM-DD')
-      : dayjs(end).format('YYYY-MM-DD');
-  } else {
-    this.filters.createdFrom = '';
-    this.filters.createdTo = '';
+  resetFilters(): void {
+    this.filterSvc.reset();
+    this.cd.detectChanges();
+    this.loadLeads();
   }
 
-  // UPDATED RANGE
-  if (this.updatedRange?.startDate && this.updatedRange?.endDate) {
-    const start = this.updatedRange.startDate;
-    const end = this.updatedRange.endDate;
+  getFilterChipText(chip: ActiveFilterChip): string {
+    if (chip.type === 'createdBy' || chip.type === 'updatedBy') {
+      const userName = this.userOptions.find(user => user._id === chip.value)?.name || chip.value;
+      return `${chip.label}: ${userName}`;
+    }
 
-    this.filters.updatedFrom = typeof start.format === 'function'
-      ? start.format('YYYY-MM-DD')
-      : dayjs(start).format('YYYY-MM-DD');
-
-    this.filters.updatedTo = typeof end.format === 'function'
-      ? end.format('YYYY-MM-DD')
-      : dayjs(end).format('YYYY-MM-DD');
-  } else {
-    this.filters.updatedFrom = '';
-    this.filters.updatedTo = '';
+    return `${chip.label}: ${chip.value}`;
   }
 
-  console.log('Filters being sent:', this.filters); // verify dates are set
-  this.showFilter = false; // close modal after apply
-  this.loadLeads();
-}
-resetFilters(): void {
-  this.filters = {
-    stage:       '',
-    status:      '',
-    search:      '',
-    sortBy:      'createdAt',
-    order:       'desc',
-    createdFrom: '',
-    createdTo:   '',
-    updatedFrom: '',
-    updatedTo:   '',
-    createdBy:   '',
-    updatedBy:   '',
-  };
+  removeFilterChip(chip: ActiveFilterChip): void {
+    if (chip.type === 'stage') {
+      this.filters.stage = this.filters.stage.filter((stage: string) => stage !== chip.value);
+    }
 
-  // ✅ Also clear the date range picker models
-  this.createdRange = null;
-  this.updatedRange = null;
+    if (chip.type === 'status') {
+      this.filters.status = this.filters.status.filter((status: string) => status !== chip.value);
+    }
 
-  this.currentPage = 1;
-  this.cd.detectChanges();
-  this.loadLeads();
-}
+    if (chip.type === 'createdBy') {
+      this.filters.createdBy = this.filters.createdBy.filter((userId: string) => userId !== chip.value);
+    }
 
-  /* 
-     Pagination
-   */
-  get paginatedLeads(): LeadType[] {
-    const perPage = +this.itemsPerPage;
-    const start = (this.currentPage - 1) * perPage;
-    return this.leads.slice(start, start + perPage);
+    if (chip.type === 'updatedBy') {
+      this.filters.updatedBy = this.filters.updatedBy.filter((userId: string) => userId !== chip.value);
+    }
+
+    if (chip.type === 'createdDate') {
+      this.filters.createdFrom = '';
+      this.filters.createdTo = '';
+      this.filterSvc.createdRange = null;
+    }
+
+    if (chip.type === 'updatedDate') {
+      this.filters.updatedFrom = '';
+      this.filters.updatedTo = '';
+      this.filterSvc.updatedRange = null;
+    }
+
+    this.loadLeads();
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.leads.length / +this.itemsPerPage);
-  }
-
-  get totalLeads(): number {
-    return this.leads.length;
-  }
-
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
-  /* 
-     Lead Profile
-   */
-  goToLeadProfile(id: string): void {
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/dashboard/leads', id])
-    );
-    window.open(url, '_blank');
-  }
-
-  /* 
-     Action Menu
-   */
+  // ── Action menu ──────────────────────────────────────────────────────────
   toggleMenu(id: string): void {
     this.activeMenu = this.activeMenu === id ? null : id;
   }
 
-  /* 
-     Modal
-   */
+  // ── Modal ────────────────────────────────────────────────────────────────
   openModal(): void {
     this.newLead = defaultLead();
     this.errorMessage = '';
     this.isEditMode = false;
     this.selectedLeadId = null;
-    this.showModal = true;
+    this.showModal = true; // ← add this
   }
-
   closeModal(): void {
     this.showModal = false;
     this.errorMessage = '';
   }
 
-  closeAllModals(): void {
-    this.showModal = false;
-    this.showNotesModal = false;
-  }
-
-  /* 
-     Edit Lead
-   */
+  // ── Edit lead ────────────────────────────────────────────────────────────
   editLead(lead: LeadType): void {
-    this.closeAllModals();
     this.isEditMode = true;
     this.selectedLeadId = lead._id;
     this.newLead = {
-      _id:    lead._id,
-      name:   lead.name,
-      email:  lead.email,
-      phone:  lead.phone,
-      stage:  lead.stage,
+      _id: lead._id,
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      stage: lead.stage,
       status: lead.status,
     };
     this.showModal = true;
     this.activeMenu = null;
   }
 
-  /* 
-     Add / Update Lead
-   */
-  addLead(form: NgForm): void {
-    if (form.invalid) {
-      form.form.markAllAsTouched();
-      this.errorMessage = 'Please fill all required fields';
-      return;
-    }
+  // ── Add / update lead (from modal component) ─────────────────────────────
+  onModalSubmit(event: { lead: any; form: NgForm }): void {
+    const { lead, form } = event;
 
-    this.newLead.name = this.newLead.name.trim();
-    this.newLead.email = this.newLead.email.trim();
-    this.newLead.phone = this.newLead.phone.trim();
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(this.newLead.email)) {
-      this.errorMessage = 'Invalid email format';
-      return;
-    }
-
-    if (!/^[0-9]{10}$/.test(this.newLead.phone)) {
-      this.errorMessage = 'Phone number must be exactly 10 digits.';
-      return;
-    }
-
-    this.errorMessage = '';
-    this.phoneError = '';
-    this.emailError = '';
-
-    const request$ = this.isEditMode && this.selectedLeadId
-      ? this.leadService.updateLead(this.selectedLeadId, {
-          name:   this.newLead.name,
-          stage:  this.newLead.stage,
-          status: this.newLead.status,
-        })
-      : this.leadService.createLead(this.newLead);
+    const request$ =
+      this.isEditMode && this.selectedLeadId
+        ? this.leadService.updateLead(this.selectedLeadId, {
+            name: lead.name,
+            stage: lead.stage,
+            status: lead.status,
+          })
+        : this.leadService.createLead(lead);
 
     this.createSub = request$.subscribe({
       next: () => {
@@ -529,101 +372,61 @@ resetFilters(): void {
         this.loadLeads();
       },
       error: (err: any) => {
-        this.phoneError = '';
-        this.emailError = '';
-        this.errorMessage = '';
-
         const message = err?.error?.message || '';
-
         if (message.toLowerCase().includes('phone')) {
-          this.phoneError = message;
+          // pass back to modal via input? For now, show in parent
         } else if (message.toLowerCase().includes('email')) {
-          this.emailError = message;
-        } else if (err.status === 400 || err.status === 409) {
-          this.errorMessage = message;
+          // same
         } else {
-          this.errorMessage = 'Something went wrong. Try again.';
+          this.errorMessage = message || 'Something went wrong. Try again.';
         }
       },
     });
   }
 
-  /* 
-     Notes
-   */
+  // ── Notes (from modal component) ────────────────────────────────────────
   openNotesModal(lead: LeadType): void {
-    this.closeAllModals();
     this.selectedLeadForNote = lead;
-    this.noteText      = '';
+    this.noteText = '';
     this.showNotesModal = true;
-    this.activeMenu    = null;
+    this.activeMenu = null;
   }
 
-  isSaving = false;
+  onNotesSubmit(noteText: string): void {
+    if (!noteText.trim()) return;
 
-saveNote(): void {
-  if (!this.noteText.trim()) return;
+    this.isSaving = true;
+    this.noteService.addNote(this.selectedLeadForNote._id, noteText).subscribe({
+      next: () => {
+        this.showNotesModal = false;
+        this.noteText = '';
+        this.isSaving = false;
+        this.cd.detectChanges();
+      },
+      error: () => {
+        this.isSaving = false;
+        alert('Error saving note');
+      },
+    });
+  }
 
-  this.isSaving = true;
-
-  this.noteService.addNote(this.selectedLeadForNote._id, this.noteText).subscribe({
-    next: () => {
-      this.showNotesModal = false;
-      this.noteText = '';
-      this.isSaving = false;
-      this.cd.detectChanges();
-    },
-    error: () => {
-      this.isSaving = false;
-      alert('Error saving note');
-    },
-  });
-}
-
-  /* 
-     Input Validation
-   */
+  // ── Input helper ─────────────────────────────────────────────────────────
+  //  Step 1: uses onlyNumbers from validators
   onlyNumbers(event: Event): void {
     const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^0-9]/g, '');
+    input.value = onlyNumbers(input.value);
     this.newLead.phone = input.value;
   }
 
-  /* 
-     Badge
-   */
+  // ── Navigation ───────────────────────────────────────────────────────────
+  goToLeadProfile(id: string): void {
+    const url = this.router.serializeUrl(this.router.createUrlTree(['/dashboard/leads', id]));
+    window.open(url, '_blank');
+  }
+
+  // ── Badge (kept for template backward compat, pipe is preferred) ─────────
   getBadgeClass(value: string): string {
-    const map: Record<string, string> = {
-      New:       'lead__badge--new',
-      Contacted: 'lead__badge--contacted',
-      Qualified: 'lead__badge--qualified',
-      Proposal:  'lead__badge--proposal',
-      Closed:    'lead__badge--closed',
-      Active:    'lead__badge--active',
-      Inactive:  'lead__badge--inactive',
-      Pending:   'lead__badge--pending',
-    };
-    return map[value] ?? 'lead__badge--default';
+    const pipe = new LeadBadgePipe();
+    return pipe.transform(value);
   }
-
-onCreatedRangeChange(event: any): void {
-  if (event && event.startDate && event.endDate) {
-    this.createdRange = event;
-  } else {
-    this.createdRange = null;
-  }
-}
-
-// handler
-
-onUpdatedRangeChange(event: any): void {
-  if (event && event.startDate && event.endDate) {
-    this.updatedRange = event;
-  } else {
-    this.updatedRange = null;
-  }
-}
-
-
-  
 }

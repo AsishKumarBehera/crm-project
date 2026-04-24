@@ -1,0 +1,61 @@
+<div class="lead__modal" *ngIf="isOpen">
+      <div class="lead__overlay" (click)="close()"></div>
+
+      <div class="lead__modal-content">
+        <h3>{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h3>
+
+        <form (ngSubmit)="onSubmit(form)" #form="ngForm" class="lead__form">
+
+          <div class="lead__form-group">
+            <label>Name</label>
+            <input type="text" [(ngModel)]="lead.name" name="name" required #name="ngModel" />
+            <small *ngIf="name.invalid && name.touched" class="error">Name is required</small>
+          </div>
+
+          <div class="lead__form-group">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="lead.email" name="email" required #email="ngModel" (input)="emailError=''"
+              [class.error]="email.invalid && email.touched || emailError" [disabled]="isEditMode" />
+            <small *ngIf="email.invalid && email.touched" class="error">Email is required</small>
+            <small *ngIf="emailError" class="error">{{ emailError }}</small>
+          </div>
+
+          <div class="lead__form-group">
+            <label>Phone</label>
+            <input type="tel" [(ngModel)]="lead.phone" name="phone" maxlength="10" required #phone="ngModel"
+              (input)="onPhoneInput($event); phoneError=''" 
+              [class.error]="phone.invalid && phone.touched || phoneError" [disabled]="isEditMode" />
+            <small *ngIf="phone.invalid && phone.touched" class="error">Phone is required</small>
+            <small *ngIf="phoneError" class="error">{{ phoneError }}</small>
+          </div>
+
+          <div class="lead__form-group">
+            <label>Stage</label>
+            <select [(ngModel)]="lead.stage" name="stage" required #stage="ngModel">
+              <option value="">Select Stage</option>
+              <option *ngIf="!isEditMode" value="New">New</option>
+              <ng-container *ngIf="isEditMode">
+                <option *ngFor="let s of stageOptions" [value]="s">{{ s }}</option>
+              </ng-container>
+            </select>
+            <small *ngIf="stage.invalid && stage.touched" class="error">Stage is required</small>
+          </div>
+
+          <div class="lead__form-group">
+            <label>Status</label>
+            <select [(ngModel)]="lead.status" name="status" required #status="ngModel">
+              <option value="">Select Status</option>
+              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+            </select>
+            <small *ngIf="status.invalid && status.touched" class="error">Status is required</small>
+          </div>
+
+          <div class="lead__form-actions">
+            <button type="button" (click)="close()" class="lead__btn--secondary">Cancel</button>
+            <button type="submit" class="lead__btn" [disabled]="form.invalid && !isEditMode">
+              {{ isEditMode ? 'Update' : 'Save' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>

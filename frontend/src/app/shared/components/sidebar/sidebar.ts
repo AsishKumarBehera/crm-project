@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-
   isOpen = false;
+  isLeadsOpen = false;
   constructor(private router: Router) {}
 
   openSidebar() {
@@ -33,5 +33,12 @@ export class Sidebar {
   goToPublisher() {
     this.router.navigate(['/dashboard/publisher']);
     this.closeSidebar(); // optional
+  }
+  toggleLeadsMenu() {
+    this.isLeadsOpen = !this.isLeadsOpen;
+  }
+  goToUploadCsv() {
+    this.router.navigate(['/dashboard/leads/upload-csv']);
+    this.closeSidebar();
   }
 }

@@ -5,29 +5,32 @@
 
 :host {
   display: block;
-  width: 250px;
-  min-width: 250px;
+  width: 236px;
+  min-width: 236px;
   flex-shrink: 0;
   height: 100vh;
+  padding: 18px 0 18px 18px;
+  box-sizing: border-box;
 }
 
 /* ================= BASE ================= */
 
 .sidebar {
-  width: 210px;
-  height: 100vh;
-  background: linear-gradient(180deg, #ffffff, #f1f5f9);
-  color: #1e293b;
-  padding: 20px;
-  padding-bottom: 0px;
-  padding-top: 0px;
+  width: 200px;
+  height: calc(100vh - 36px);
+  background: rgba(255, 255, 255, 0.78);
+  color: #253047;
+  padding: 20px 14px;
 
   /* FIX 1: was "sticky" which breaks inside overflow:hidden.
      "relative" keeps the sidebar in the normal flex flow. */
   position: relative;
 
   transition: transform 0.3s ease;
-  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  border-radius: 24px;
+  box-shadow: 0 24px 55px rgba(80, 98, 135, 0.14);
+  backdrop-filter: blur(18px);
 
   /* FIX 2: removed z-index on desktop — no need for stacking
      when sidebar is in normal flow. Only needed on mobile. */
@@ -41,13 +44,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 28px;
+  padding: 4px 6px;
 }
 
 .sidebar__logo {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: #162033;
+  letter-spacing: 0;
 }
 
 /* Close button — hidden on desktop, shown on mobile */
@@ -69,12 +74,12 @@
 }
 
 .sidebar__section-title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #9aa7bd;
   margin-bottom: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0;
 }
 
 /* ================= MENU ================= */
@@ -90,16 +95,15 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  margin-left: 10px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  margin-bottom: 7px;
+  margin-left: 0;
   cursor: pointer;
   transition: all 0.25s ease;
   font-size: 14px;
-  color: #334155;
-  border-left: 3px solid #3b82f6;
-  border-bottom: 1px solid #f1f5f9;
+  color: #506079;
+  border: 1px solid transparent;
 }
 
 /* Icon */
@@ -114,17 +118,19 @@
 
 /* Hover */
 .sidebar__item:hover {
-  background: #e2e8f0;
-  transform: translateX(4px);
-  border-left: 3px solid #3b82f6;
+  background: #f5f8fe;
+  color: #20304b;
+  transform: translateX(3px);
+  border-color: #e4ebf7;
 }
 
 /* Active */
 .sidebar__item--active {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: #355f9f;
   color: #ffffff;
   font-weight: 500;
-  border-left: 3px solid #2e3852;
+  border-color: #355f9f;
+  box-shadow: 0 12px 28px rgba(53, 95, 159, 0.24);
 }
 
 /* ================= MOBILE TOGGLE ================= */
@@ -135,12 +141,15 @@
   top: 15px;
   left: 15px;
   font-size: 22px;
+  margin-top: 13px;
+  margin-left: 30px;
   cursor: pointer;
   z-index: 1300;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.9);
   padding: 6px 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 14px 32px rgba(80, 98, 135, 0.16);
   transition: all 0.3s ease;
 }
 
@@ -163,6 +172,22 @@
   z-index: 1100;
 }
 
+/* sidebar sub menu */
+
+.sidebar__submenu {
+  padding-left: 30px;
+}
+
+.sidebar__subitem {
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sidebar__subitem:hover {
+  color: #4cafef;
+}
+
 /* ================= MOBILE ================= */
 
 @media (max-width: 768px) {
@@ -183,6 +208,7 @@
     width: 220px;
     height: 100vh;
     transform: translateX(-100%);
+    border-radius: 0 24px 24px 0;
 
     /* FIX 5: z-index only needed on mobile where it overlays content */
     z-index: 1200;

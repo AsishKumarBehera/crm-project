@@ -1,0 +1,15 @@
+ <div class="lead__modal" *ngIf="isOpen">
+      <div class="lead__overlay" (click)="close()"></div>
+
+      <div class="lead__modal-content">
+        <h3>Add Note</h3>
+
+        <textarea [(ngModel)]="noteText" placeholder="Write your note..." class="lead__input">
+        </textarea>
+
+        <div class="lead__form-actions">
+          <button type="button" (click)="close()" class="lead__btn--secondary">Cancel</button>
+          <button type="button" (click)="save()" class="lead__btn">Save Note</button>
+        </div>
+      </div>
+    </div>

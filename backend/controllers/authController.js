@@ -129,5 +129,9 @@ export async function logout (req, res) {
 
 
 export const loggedIn = (req, res) => {
+  // req.user is set by your auth middleware (verifyToken)
+  if (!req.user) {
+    return res.status(401).json({ isAuthenticated: false });
+  }
   res.status(200).json({ isAuthenticated: true });
 };

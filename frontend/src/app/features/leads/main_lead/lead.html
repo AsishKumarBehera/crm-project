@@ -15,115 +15,44 @@
   <!-- FILTER BAR -->
   <div class="lead__filters">
 
-  <!-- SEARCH -->
-  <input 
-    type="text" 
-    placeholder="Search..." 
-    [(ngModel)]="filters.search" 
-    (keyup.enter)="onSearchClick()"
-    class="lead__input" 
-  />
+    <!-- SEARCH -->
+    <input type="text" placeholder="Search..." [(ngModel)]="filters.search" (keyup.enter)="onSearchClick()"
+      class="lead__input" />
 
-  <button class="lead__btn lead__btn--search" (click)="onSearchClick()">
-    🔍 Search
-  </button>
+    <button class="lead__btn lead__btn--search" (click)="onSearchClick()">
+      🔍 Search
+    </button>
 
-  <!-- FILTER ICON -->
-  <button class="lead__btn filter-btn" (click)="toggleFilter()">
-    ⚙️
-  </button>
+    <!-- FILTER ICON -->
+    <button class="lead__btn filter-btn" (click)="toggleFilter()">
+      ⚙️
+    </button>
 
-</div>
-
-<div class="lead__modal" *ngIf="showFilter">
-  <div class="lead__overlay" (click)="showFilter = false"></div>
-
-  <div class="lead__modal-content filter-modal">
-    <div class="modal-header">
-      <h3>Filter Leads</h3>
-      <button class="close-btn" (click)="showFilter = false">✖</button>
-    </div>
-
-    <div class="filter-panel">
-
-      <div>
-        <small>Stage</small>
-        <select [(ngModel)]="filters.stage" class="lead__input">
-          <option value="">All stages</option>
-          <option *ngFor="let s of stageOptions" [value]="s">{{ s }}</option>
-        </select>
-      </div>
-
-      <div>
-        <small>Status</small>
-        <select [(ngModel)]="filters.status" class="lead__input">
-          <option value="">All statuses</option>
-          <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
-        </select>
-      </div>
-
-      <div>
-        <small>Created by</small>
-        <select [(ngModel)]="filters.createdBy" class="lead__input">
-          <option value="">All users</option>
-          <option *ngFor="let u of userOptions" [value]="u._id">{{ u.name }}</option>
-        </select>
-      </div>
-
-      <div>
-        <small>Updated by</small>
-        <select [(ngModel)]="filters.updatedBy" class="lead__input">
-          <option value="">All users</option>
-          <option *ngFor="let u of userOptions" [value]="u._id">{{ u.name }}</option>
-        </select>
-      </div>
-
-      <!-- Created At -->
-      <div>
-        <small>Created At</small>
-        <input
-          ngxDaterangepickerMd
-          [(ngModel)]="createdRange"
-          [ranges]="ranges"
-          [showCustomRangeLabel]="true"
-          [showClearButton]="true"
-          [autoApply]="false"
-          [linkedCalendars]="false"
-          [opens]="'right'"
-          [drops]="'up'"
-          placeholder="Select date range"
-          (datesUpdated)="onCreatedRangeChange($event)"
-          class="lead__input"
-        />
-      </div>
-
-      <!-- Updated At -->
-      <div>
-        <small>Updated At</small>
-        <input
-          ngxDaterangepickerMd
-          [(ngModel)]="updatedRange"
-          [ranges]="ranges"
-          [showCustomRangeLabel]="true"
-          [showClearButton]="true"
-          [autoApply]="false"
-          [linkedCalendars]="false"
-          [opens]="'right'"
-          [drops]="'up'"
-          placeholder="Select date range"
-          (datesUpdated)="onUpdatedRangeChange($event)"
-          class="lead__input"
-        />
-      </div>
-
-    </div>
-
-    <div class="lead__form-actions">
-      <button class="btn reset" (click)="resetFilters()">Reset</button>
-      <button class="btn apply" (click)="applyFilters()">Apply</button>
-    </div>
   </div>
-</div>
+
+  <app-lead-filter-modal
+  [isOpen]="showFilter"
+  [stageOptions]="stageOptions"
+  [statusOptions]="statusOptions"
+  [userOptions]="userOptions"
+  (closed)="showFilter = false"
+  (applied)="showFilter = false; loadLeads()"
+  (resetted)="resetFilters()">
+</app-lead-filter-modal>
+
+  <!-- ACTIVE FILTERS -->
+  <div *ngIf="activeFilterChips.length" class="active-filters">
+    <span class="active-filters__label">Filters:</span>
+    <button
+      type="button"
+      class="active-filter-chip"
+      *ngFor="let chip of activeFilterChips"
+      (click)="removeFilterChip(chip)">
+      {{ getFilterChipText(chip) }}
+      <span>x</span>
+    </button>
+    <button type="button" class="active-filters__clear" (click)="resetFilters()">Clear all</button>
+  </div>
 
   <!-- ERROR -->
   <div *ngIf="errorMessage" class="error">
@@ -136,7 +65,7 @@
 
       <thead class="headd">
         <tr>
-          <th>ID</th>
+          <th>SL</th>
           <th>Name</th>
           <th>Email</th>
           <th>Phone</th>
@@ -167,19 +96,19 @@
         <!--  DATA -->
         <ng-container *ngIf="!isLoading">
           <tr *ngFor="let lead of paginatedLeads; let i = index" class="lead__row">
-            <td class="lead__id">{{ i + 1 }}</td>
-            <td><span (click)="goToLeadProfile(lead._id)" class="lead__link">{{ lead.name }}</span></td>
-            <td>{{ lead.email }}</td>
-            <td>{{ lead.phone }}</td>
+            <td class="lead__id" data-label="SL">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+            <td data-label="Name"><span (click)="goToLeadProfile(lead._id)" class="lead__link">{{ lead.name }}</span></td>
+            <td data-label="Email">{{ lead.email }}</td>
+            <td data-label="Phone">{{ lead.phone }}</td>
 
-            <td>
-              <span class="lead__badge" [ngClass]="getBadgeClass(lead.stage)">
+            <td data-label="Stage">
+              <span class="lead__badge" [ngClass]="lead.stage | leadBadge">
                 {{ lead.stage }}
               </span>
             </td>
 
-            <td>
-              <span class="lead__badge" [ngClass]="getBadgeClass(lead.status)">
+            <td data-label="Status">
+              <span class="lead__badge" [ngClass]="lead.status | leadBadge">
                 {{ lead.status }}
               </span>
             </td>
@@ -199,26 +128,26 @@
               </ng-template>
 
             </td>
-            <td>
-  <span *ngIf="lead.createdBy; else noCreator">
-    {{ lead.createdBy.name }}
-  </span>
+            <td data-label="Created By">
+              <span *ngIf="lead.createdBy; else noCreator">
+                {{ lead.createdBy.name }}
+              </span>
 
-  <ng-template #noCreator>
-    ---
-  </ng-template>
-</td>
-<td>
-  <span *ngIf="lead.updatedBy && lead.updatedAt !== lead.createdAt; else noUpdater">
-    {{ lead.updatedBy.name }}
-  </span>
+              <ng-template #noCreator>
+                ---
+              </ng-template>
+            </td>
+            <td data-label="Updated By">
+              <span *ngIf="lead.updatedBy && lead.updatedAt !== lead.createdAt; else noUpdater">
+                {{ lead.updatedBy.name }}
+              </span>
 
-  <ng-template #noUpdater>
-    ---
-  </ng-template>
-</td>
+              <ng-template #noUpdater>
+                ---
+              </ng-template>
+            </td>
 
-            <td>
+            <td data-label="Action">
               <div class="action-menu">
                 <button (click)="toggleMenu(lead._id)">⋮</button>
                 <div class="dropdown" *ngIf="activeMenu === lead._id">
@@ -266,84 +195,19 @@
 </div>
 
 <!-- ================= MODAL ================= -->
-<div class="lead__modal" *ngIf="showModal">
-  <div class="lead__overlay" (click)="closeModal()"></div>
+<app-lead-modal
+  [isOpen]="showModal"
+  [isEditMode]="isEditMode"
+  [lead]="newLead"
+  [stageOptions]="stageOptions"
+  [statusOptions]="statusOptions"
+  (closed)="closeModal()"
+  (submitted)="onModalSubmit($event)">
+</app-lead-modal>
 
-  <div class="lead__modal-content">
-    <h3>{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h3>
-
-    <form (ngSubmit)="addLead(leadForm)" #leadForm="ngForm" class="lead__form">
-
-      <div class="lead__form-group">
-        <label>Name</label>
-        <input type="text" [(ngModel)]="newLead.name" name="name" required #name="ngModel" />
-        <small *ngIf="name.invalid && name.touched" class="error">Name is required</small>
-      </div>
-
-      <div class="lead__form-group">
-        <label>Email</label>
-        <input type="email" [(ngModel)]="newLead.email" name="email" required #email="ngModel" (input)="emailError=''"
-          [class.error]="email.invalid && email.touched || emailError" [disabled]="isEditMode" />
-        <small *ngIf="email.invalid && email.touched" class="error">Email is required</small>
-        <small *ngIf="emailError" class="error">{{ emailError }}</small>
-      </div>
-
-      <div class="lead__form-group">
-        <label>Phone</label>
-        <input type="tel" [(ngModel)]="newLead.phone" name="phone" maxlength="10" required #phone="ngModel"
-          (input)="onlyNumbers($event); phoneError=''" [class.error]="phone.invalid && phone.touched || phoneError"
-          [disabled]="isEditMode" />
-        <small *ngIf="phone.invalid && phone.touched" class="error">Phone is required</small>
-        <small *ngIf="phoneError" class="error">{{ phoneError }}</small>
-      </div>
-
-      <div class="lead__form-group">
-        <label>Stage</label>
-        <select [(ngModel)]="newLead.stage" name="stage" required #stage="ngModel">
-          <option value="">Select Stage</option>
-          <option *ngIf="!isEditMode" value="New">New</option>
-          <ng-container *ngIf="isEditMode">
-            <option *ngFor="let s of stageOptions" [value]="s">{{ s }}</option>
-          </ng-container>
-        </select>
-        <small *ngIf="stage.invalid && stage.touched" class="error">Stage is required</small>
-      </div>
-
-      <div class="lead__form-group">
-        <label>Status</label>
-        <select [(ngModel)]="newLead.status" name="status" required #status="ngModel">
-          <option value="">Select Status</option>
-          <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
-        </select>
-        <small *ngIf="status.invalid && status.touched" class="error">Status is required</small>
-      </div>
-
-      <div class="lead__form-actions">
-        <button type="button" (click)="closeModal()" class="lead__btn--secondary">Cancel</button>
-
-        <button type="submit" class="lead__btn" [disabled]="leadForm.invalid && !isEditMode">
-          {{ isEditMode ? 'Update' : 'Save' }}
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="lead__modal" *ngIf="showNotesModal">
-
-  <div class="lead__overlay" (click)="showNotesModal = false"></div>
-
-  <div class="lead__modal-content">
-    <h3>Add Note</h3>
-
-    <textarea [(ngModel)]="noteText" placeholder="Write your note..." class="lead__input">
-     </textarea>
-
-    <div class="lead__form-actions">
-      <button type="button" (click)="showNotesModal = false" class="lead__btn--secondary">Cancel</button>
-      <button type="button" (click)="saveNote()" class="lead__btn">Save Note</button>
-    </div>
-  </div>
-
-</div>
-
+<app-lead-notes-modal
+  [isOpen]="showNotesModal"
+  [noteText]="noteText"
+  (closed)="showNotesModal = false"
+  (submitted)="onNotesSubmit($event)">
+</app-lead-notes-modal>

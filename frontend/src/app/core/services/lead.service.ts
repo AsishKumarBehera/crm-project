@@ -1,6 +1,8 @@
 // lead.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 
 @Injectable({ providedIn: 'root' })
 export class LeadService {
@@ -32,6 +34,10 @@ export class LeadService {
     return this.http.put(`${this.API_URL}/leads/updatelead/${id}`, data, {
       withCredentials: true
         });
+  }
+
+  uploadCsv(formData: FormData): Observable<any> {
+    return this.http.post(`${this.API_URL}/upload`, formData);
   }
 
 

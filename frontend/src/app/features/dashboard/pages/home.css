@@ -2,7 +2,11 @@
 .dashboard-container {
   display: flex;
   height: 100vh;
-  background: #f1f5f9;
+  background:
+    radial-gradient(circle at 24% 0%, rgba(255, 255, 255, 0.9) 0 18%, transparent 38%),
+    linear-gradient(135deg, #eaf0fb 0%, #f7f9fd 48%, #e4ebf7 100%);
+  color: #172033;
+  font-family: "Manrope", "Segoe UI", sans-serif;
 
   /* FIX 1: was "overflow: hidden" which broke:
      - sidebar position:sticky (silently falls back to static)
@@ -43,7 +47,7 @@ app-navbar {
 .content {
   flex: 1;
   overflow-y: auto;     /* only this area scrolls */
-  padding: 20px;
+  padding: 22px 28px 28px;
 }
 
 /* ================= CARDS ================= */
@@ -55,12 +59,14 @@ app-navbar {
 }
 
 .card {
-  background: white;
+  background: rgba(255, 255, 255, 0.82);
   padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(77, 95, 130, 0.12);
   font-size: 15px;
   transition: transform 0.2s ease;
+  backdrop-filter: blur(14px);
 }
 
 .card:hover {
@@ -71,14 +77,6 @@ app-navbar {
   font-size: 22px;
   display: block;
   margin-top: 8px;
-}
-
-/* ================= WELCOME ================= */
-.welcome {
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  font-size: 15px;
 }
 
 /* ================= MOBILE ================= */
